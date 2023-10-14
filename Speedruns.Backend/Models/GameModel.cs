@@ -8,6 +8,8 @@
         public string Series {  get; set; }
         public int Players { get; set; }
         public int RunsPublished { get; set; }
+
+        public RunModel Run { get; set; }
       
     }
 }

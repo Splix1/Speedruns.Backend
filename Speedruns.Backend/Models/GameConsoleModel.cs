@@ -7,5 +7,6 @@
 
         public GameModel Game { get; set; }
         public ConsoleModel Console { get; set; }
+        public RunModel Run { get; set; }
     }
 }
