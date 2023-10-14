@@ -9,7 +9,7 @@
         public int Players { get; set; }
         public int RunsPublished { get; set; }
 
-        public RunModel Run { get; set; }
+        public List<RunModel> Runs { get; set; } = new List<RunModel>();
       
     }
 }

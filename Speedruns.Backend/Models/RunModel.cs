@@ -11,6 +11,6 @@
         public UserModel User { get; set; }
         public ConsoleModel Console { get; set; }
         public GameModel Game { get; set; }
-        public CommentModel Comment { get; set; }
+        public List<CommentModel> Comments { get; set; }
     }
 }
