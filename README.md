@@ -5,9 +5,10 @@
 ## The backend will consist primarily of C#/ASP.NET using the Entity Framework.
 
 ## General Database Schema:
-* User - UserName, ImageUrl, YoutubeLink, TwitchLink
-* Game - Name, ImageUrl, ReleaseYear, Series, Players, RunsPublished
-* Run - Date, Console, User, Game, Comment
-* Comment - Date, Text, Run, User
-* Console - Name
-* GameConsoles - Game, Console
+* User (1 to many w/ Runs) - UserName, ImageUrl, YoutubeLink, TwitchLink, Runs
+* Game (1 to many w/ Runs) - Name, ImageUrl, ReleaseYear, Series, Players, RunsPublished, Runs
+* Run (1 to many w/ User, Game, Console and Comment) - Date, Console, User, Game, Comment
+* Comment (1 to many w/ Runs) - Date, Text, Run, User
+* Console (1 to many w/ Runs, many to many with Game) - Name
+* GameConsole (junction table for Game and Console) - Game, Console
+
