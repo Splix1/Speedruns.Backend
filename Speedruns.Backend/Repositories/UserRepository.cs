@@ -35,7 +35,8 @@ namespace Speedruns.Backend.Repositories
            
             _users.Add(user);
             await _context.SaveChangesAsync();
-            return await GetByName(user.UserName);
+
+            return user;
         }
 
         public async Task UpdateUser(long id, UserModel user)

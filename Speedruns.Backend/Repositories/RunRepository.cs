@@ -35,9 +35,7 @@ namespace Speedruns.Backend.Repositories
             _runs.Add(run);
             await _context.SaveChangesAsync();
 
-            var runs = await GetAll();
-
-            return runs.Last();
+            return run;
         }
 
         public async Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run)
