@@ -1,7 +1,7 @@
 using Speedruns.Backend.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-
+using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,7 @@ var configuration = builder.Configuration;
 builder.Services.AddDbContext<SpeedrunsContext>(options => options.UseNpgsql(configuration.GetConnectionString("speedruns")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

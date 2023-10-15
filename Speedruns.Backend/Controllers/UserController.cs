@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Speedruns.Backend.Models;
-
+using Speedruns.Backend.Interfaces;
 
 namespace Speedruns.Backend.Controllers
 {
@@ -9,13 +8,13 @@ namespace Speedruns.Backend.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DbSet<UserModel> _users;
-        private readonly SpeedrunsContext _context;
+        private readonly IUserRepository _users;
+        
 
-        public UserController(SpeedrunsContext context)
+        public UserController(IUserRepository users)
         {
-            _users = context.Users;
-            _context = context;
+            _users = users;
+           
         }
 
         // GET: /api/users
@@ -23,8 +22,8 @@ namespace Speedruns.Backend.Controllers
         public async Task<ActionResult<List<UserModel>>> GetAll()
         {
             try
-            {
-                var users = await _users.ToListAsync();
+            { 
+                var users = await _users.GetAll();
                 return Ok(users);
             }
             catch(Exception ex)
@@ -36,11 +35,11 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/users/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserModel>> GetUser(long id)
+        public async Task<ActionResult<UserModel>> GetById(long id)
         {
             try
             {
-                return Ok(await _users.FindAsync(id));
+                return Ok(await _users.GetById(id));
             }
             catch(Exception ex)
             {
@@ -60,13 +59,13 @@ namespace Speedruns.Backend.Controllers
                     return Problem("Model set 'SpeedrunsContext.Users' is null.");
                 }
 
-                if(_users.Contains(user))
+                var ifUserExists = await _users.GetByName(user.UserName);
+                if (ifUserExists != null)
                 {
-                    return BadRequest("User already exists.");
+                    return BadRequest("User with that name already exists.");
                 }
 
-                _users.Add(user);
-                await _context.SaveChangesAsync();
+                await _users.CreateUser(user);
                 
                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
             }
@@ -88,19 +87,15 @@ namespace Speedruns.Backend.Controllers
                     return Problem("Model set 'SpeedrunsContext.Users' is null.");
                 }
 
-                var userToUpdate = await _users.FindAsync(id);
+                var userToUpdate = await _users.GetById(id);
                 if (userToUpdate == null)
                 {
                     return NotFound("User does not exist.");
                 }
 
-                userToUpdate.UserName = user.UserName;
-                userToUpdate.ImageUrl = user.ImageUrl;
-                userToUpdate.YoutubeLink = user.YoutubeLink;
-                userToUpdate.TwitchLink = user.TwitchLink;
-                
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("GetUser", new {id = user.Id}, user);
+                await _users.UpdateUser(id, user);
+
+                return Ok(await _users.GetById(id));
             }
              catch(Exception ex)
             {
