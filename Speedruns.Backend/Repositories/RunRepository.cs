@@ -4,7 +4,7 @@ using Speedruns.Backend.Models;
 
 namespace Speedruns.Backend.Repositories
 {
-    public class RunRepository
+    public class RunRepository : IRunRepository
     {
         private readonly SpeedrunsContext _context;
         private readonly DbSet<RunModel> _runs;
@@ -25,12 +25,30 @@ namespace Speedruns.Backend.Repositories
             return await _runs.FindAsync(id);
         }
 
-        public async Task CreateRun(RunModel run)
+        public async Task<RunModel> CreateRun(RunModel run)
         {
             _runs.Add(run);
             await _context.SaveChangesAsync();
+
+            var newRun = _runs.Find(run);
+
+            return newRun;
         }
 
-        
+        public async Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run)
+        {
+            
+            runToUpdate.Date = run.Date;
+            runToUpdate.Console = run.Console;
+
+            await _context.SaveChangesAsync();
+            return runToUpdate;
+        }
+
+        public async Task DeleteRun(RunModel run)
+        {
+            _runs.Remove(run);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Speedruns.Backend.Interfaces
         Task<List<RunModel>> GetAll();
         Task<RunModel> GetById(long id);
         Task<RunModel> CreateRun(RunModel run);
-        Task<RunModel> UpdateRun(long id, RunModel run);
-        Task<RunModel> DeleteRun(long id);
+        Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run);
+        Task DeleteRun(RunModel run);
     }
 }
