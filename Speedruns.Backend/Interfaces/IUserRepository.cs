@@ -7,7 +7,7 @@ namespace Speedruns.Backend.Interfaces
         Task<List<UserModel>> GetAll();
         Task<UserModel> GetById(long id);
         Task<UserModel> GetByName(string name);
-        Task CreateUser(UserModel user);
+        Task<UserModel> CreateUser(UserModel user);
         Task UpdateUser(long id, UserModel user);
 
         Task DeleteUser(UserModel user);

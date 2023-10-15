@@ -30,11 +30,12 @@ namespace Speedruns.Backend.Repositories
             return await _users.FirstOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task CreateUser(UserModel user)
+        public async Task<UserModel> CreateUser(UserModel user)
         {
            
             _users.Add(user);
             await _context.SaveChangesAsync();
+            return await GetByName(user.UserName);
         }
 
         public async Task UpdateUser(long id, UserModel user)
