@@ -21,7 +21,7 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<CommentModel> GetCommentById(long id)
         {
-            return await _comments.FindAsync(id);
+            return await _comments.Include(x => x.User).Include(x => x.Run).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<CommentModel> AddComment(CommentModel comment)
