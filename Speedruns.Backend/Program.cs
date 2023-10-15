@@ -2,12 +2,17 @@ using Speedruns.Backend.Models;
 using Microsoft.EntityFrameworkCore;
 using Speedruns.Backend.Interfaces;
 using Speedruns.Backend.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 var configuration = builder.Configuration;
 builder.Services.AddDbContext<SpeedrunsContext>(options => options.UseNpgsql(configuration.GetConnectionString("speedruns")));

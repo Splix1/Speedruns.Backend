@@ -17,12 +17,12 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<List<UserModel>> GetAll()
         {
-            return await _users.ToListAsync(); 
+            return await _users.Include(x => x.Runs).ToListAsync();
         }
 
         public async Task<UserModel> GetById(long id)
         {
-            return await _users.FindAsync(id);
+            return await _users.Include(x => x.Runs).FirstAsync(x => x.Id == id);
         }
 
         public async Task<UserModel> GetByName(string username)
