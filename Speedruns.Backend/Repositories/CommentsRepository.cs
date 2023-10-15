@@ -16,7 +16,12 @@ namespace Speedruns.Backend.Repositories
         }
         public async Task<List<CommentModel>> GetComments(long runId)
         {
-            return await _comments.Where(comment => comment.RunId == runId).ToListAsync();
+            return await _comments.Include(x => x.Run).Include(x => x.User).Where(comment => comment.RunId == runId).ToListAsync();
+        }
+
+        public async Task<CommentModel> GetCommentById(long id)
+        {
+            return await _comments.FindAsync(id);
         }
 
         public async Task<CommentModel> AddComment(CommentModel comment)
@@ -24,7 +29,7 @@ namespace Speedruns.Backend.Repositories
             _comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return _comments.Last();
+            return comment;
         }
 
         public async Task UpdateComment(CommentModel comment)
