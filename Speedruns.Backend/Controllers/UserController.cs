@@ -67,7 +67,7 @@ namespace Speedruns.Backend.Controllers
 
                 await _users.CreateUser(user);
                 
-                return CreatedAtAction("GetUser", new { id = user.Id }, user);
+                return Ok(await _users.GetByName(user.UserName));
             }
             catch(Exception ex)
             {

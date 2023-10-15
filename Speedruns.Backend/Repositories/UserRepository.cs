@@ -27,11 +27,12 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<UserModel> GetByName(string username)
         {
-            return await _users.FirstAsync(x => x.UserName == username);
+            return await _users.FirstOrDefaultAsync(x => x.UserName == username);
         }
 
         public async Task CreateUser(UserModel user)
         {
+           
             _users.Add(user);
             await _context.SaveChangesAsync();
         }
