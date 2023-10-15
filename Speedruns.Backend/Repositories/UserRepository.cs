@@ -49,5 +49,12 @@ namespace Speedruns.Backend.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteUser(UserModel user)
+        {
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -103,5 +103,28 @@ namespace Speedruns.Backend.Controllers
                 return StatusCode(500);
             }
         }
+
+        // DELETE: /api/users/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUser(long id)
+        {
+            try
+            {
+                var user = await _users.GetById(id);
+                if (user == null)
+                { 
+                    return NotFound(); 
+                }
+
+                await _users.DeleteUser(user);
+
+                return Ok("User successfully deleted.");
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
     }
 }

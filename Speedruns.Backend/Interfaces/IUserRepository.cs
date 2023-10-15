@@ -9,5 +9,7 @@ namespace Speedruns.Backend.Interfaces
         Task<UserModel> GetByName(string name);
         Task CreateUser(UserModel user);
         Task UpdateUser(long id, UserModel user);
+
+        Task DeleteUser(UserModel user);
     }
 }
