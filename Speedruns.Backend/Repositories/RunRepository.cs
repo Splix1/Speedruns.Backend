@@ -25,14 +25,19 @@ namespace Speedruns.Backend.Repositories
             return await _runs.FindAsync(id);
         }
 
+        public async Task<List<RunModel>> GetUserRuns(long id)
+        {
+            return await _runs.Where(run => run.UserId == id).ToListAsync();
+        }
+
         public async Task<RunModel> CreateRun(RunModel run)
         {
             _runs.Add(run);
             await _context.SaveChangesAsync();
 
-            var newRun = _runs.Find(run);
+            var runs = await GetAll();
 
-            return newRun;
+            return runs.Last();
         }
 
         public async Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run)

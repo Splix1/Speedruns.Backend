@@ -14,6 +14,7 @@ builder.Services.AddDbContext<SpeedrunsContext>(options => options.UseNpgsql(con
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRunRepository, RunRepository>();
 
 var app = builder.Build();
 

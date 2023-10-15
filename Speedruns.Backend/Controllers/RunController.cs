@@ -1,10 +1,116 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Speedruns.Backend.Interfaces;
 using Speedruns.Backend.Models;
 
 namespace Speedruns.Backend.Controllers
 {
+    [Route("api/runs")]
+    [ApiController]
     public class RunController : ControllerBase
     {
+        private readonly IRunRepository _runs;
+
+        public RunController(IRunRepository runs)
+        {
+            _runs = runs;
+        }
+
+        // GET: /api/runs
+        [HttpGet]
+        public async Task<ActionResult<List<RunModel>>> GetAll()
+        {
+            try
+            {
+                return Ok(await _runs.GetAll());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
+        // GET: /api/runs/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<RunModel>> GetById(long id)
+        {
+            try
+            {
+                return Ok(await _runs.GetById(id));
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
+        // POST: /api/runs
+        [HttpPost]
+        public async Task<ActionResult<RunModel>> CreateRun(RunModel run)
+        {
+            try
+            {
+                var runs = await _runs.GetUserRuns(run.UserId);
+
+                if (runs.Contains(run))
+                {
+                    return BadRequest("Run already exists.");
+                }
+
+                return Ok(await _runs.CreateRun(run));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
+        // PUT: /api/runs/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult<RunModel>> UpdateRun(long id, RunModel run)
+        {
+            try
+            {
+                var runToUpdate = await _runs.GetById(id);
+
+                if (runToUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(await _runs.UpdateRun(runToUpdate, run));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+
+            }
+        }
+
+        // DELETE: /api/runs/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteRun(long id)
+        {
+            try
+            {
+                var run = await _runs.GetById(id);
+
+                if (run == null )
+                {
+                    return NotFound("Run does not exist.");
+                }
+
+                await _runs.DeleteRun(run);
+                return Ok("Run successfully deleted.");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
     }
 }

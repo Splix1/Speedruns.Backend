@@ -7,6 +7,7 @@
         public long ConsoleId { get; set; }
         public long GameId { get; set; }
         public long CommentId { get; set; }
+        public long Time {  get; set; }
 
         public UserModel User { get; set; }
         public ConsoleModel Console { get; set; }

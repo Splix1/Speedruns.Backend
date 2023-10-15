@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Speedruns.Backend.Models;
@@ -11,9 +12,11 @@ using Speedruns.Backend.Models;
 namespace Speedruns.Backend.Migrations
 {
     [DbContext(typeof(SpeedrunsContext))]
-    partial class SpeedrunsContextModelSnapshot : ModelSnapshot
+    [Migration("20231015174957_speedrun time")]
+    partial class speedruntime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
