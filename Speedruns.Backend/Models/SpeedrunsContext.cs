@@ -15,5 +15,12 @@ namespace Speedruns.Backend.Models
         public DbSet<ConsoleModel> Consoles { get; set; }
         public DbSet<GameConsoleModel> GameConsoles { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserModel>()
+                .HasMany(x => x.Runs)
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.SetNull);
+        }
     }
 }

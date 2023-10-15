@@ -53,6 +53,13 @@ namespace Speedruns.Backend.Repositories
 
         public async Task DeleteUser(UserModel user)
         {
+            // pull and update UserName column on runs upon user deletion
+            var runs = _context.Runs.Where(x => x.UserId == user.Id);
+
+            foreach (var run in runs)
+            {
+                run.UserName = user.UserName;
+            }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();

@@ -25,7 +25,7 @@ namespace Speedruns.Backend.Repositories
             return await _runs.FindAsync(id);
         }
 
-        public async Task<List<RunModel>> GetUserRuns(long id)
+        public async Task<List<RunModel>> GetUserRuns(long? id)
         {
             return await _runs.Where(run => run.UserId == id).ToListAsync();
         }
