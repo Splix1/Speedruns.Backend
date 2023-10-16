@@ -32,7 +32,19 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<RunModel> CreateRun(RunModel run)
         {
+            var game = await _context.Games.FindAsync(run.GameId);
+            game.RunsPublished++;
+            
+            var userRuns = await GetUserRuns(run.UserId);
+            var userGameRuns = userRuns.Where(x => x.GameId == run.GameId).ToList();
+
+            if (!userGameRuns.Any())
+            {
+                game.Players++;
+            }
+            
             _runs.Add(run);
+
             await _context.SaveChangesAsync();
 
             return run;
