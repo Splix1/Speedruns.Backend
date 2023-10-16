@@ -1,19 +1,19 @@
-﻿using Speedruns.Backend.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Speedruns.Backend.Interfaces;
 using Speedruns.Backend.Models;
 
 namespace Speedruns.Backend.Repositories
 {
     public class ConsolesRepository : IConsolesRepository
     {
-        private readonly IConsolesRepository _consoles;
-        public ConsolesRepository(IConsolesRepository consoles)
+        private readonly DbSet<ConsoleModel> _consoles;
+        public ConsolesRepository(SpeedrunsContext context)
         {
-            _consoles = consoles;
+            _consoles = context.Consoles;
         }
-
         public async Task<List<ConsoleModel>> GetAll()
         {
-            return await _consoles.GetAll();
+            return await _consoles.ToListAsync();
         }
     }
 }

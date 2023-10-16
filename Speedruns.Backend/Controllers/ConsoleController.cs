@@ -26,7 +26,7 @@ namespace Speedruns.Backend.Controllers
                     return NotFound("Consoles is empty.");
                 }
 
-                return Ok(_consoles.GetAll());
+                return Ok(await _consoles.GetAll());
 
             } catch (Exception ex)
             {
