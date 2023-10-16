@@ -9,6 +9,7 @@
         public int Players { get; set; }
         public int RunsPublished { get; set; }
 
+        public List<GameConsoleModel> GameConsoles { get; set; } = new List<GameConsoleModel>();
         public List<RunModel> Runs { get; set; } = new List<RunModel>();
       
     }
