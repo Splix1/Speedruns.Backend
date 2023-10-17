@@ -14,6 +14,7 @@ namespace Speedruns.Backend.Models
         public DbSet<CommentModel> Comments { get; set; }
         public DbSet<ConsoleModel> Consoles { get; set; }
         public DbSet<GameConsoleModel> GameConsoles { get; set; }
+        public DbSet<SeriesModel> Series { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
