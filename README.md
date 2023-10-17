@@ -2,7 +2,7 @@
 
 ## This repository contains the backend for my [speedrun.com](https://www.speedrun.com/) clone. This is a fun project to further learn C#/.NET and build upon those skills.
 
-## The backend will consist primarily of C#/ASP.NET following the repository pattern using the Entity Framework.
+## The backend will consist primarily of C#/ASP.NET following the repository pattern using the Entity Framework and use Auth0 for user authentication.
 
 ## General Database Schema:
 * User (1 to many w/ Runs) - UserName, ImageUrl, YoutubeLink, TwitchLink, Runs
