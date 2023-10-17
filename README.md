@@ -11,4 +11,4 @@
 * Comment (1 to many w/ Runs) - Date, Text, Run, User
 * Console (1 to many w/ Runs, many to many with Game) - Name
 * GameConsole (junction table for Game and Console) - Game, Console
-
+* Series (1 to many w/ Games) - Name, Players
