@@ -23,6 +23,7 @@ builder.Services.AddScoped<IRunRepository, RunRepository>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
 builder.Services.AddScoped<IGamesRepository, GamesRepository>();
 builder.Services.AddScoped<IConsolesRepository, ConsolesRepository>();
+builder.Services.AddScoped<ISeriesRepository, SeriesRepository>();
 
 var app = builder.Build();
 
