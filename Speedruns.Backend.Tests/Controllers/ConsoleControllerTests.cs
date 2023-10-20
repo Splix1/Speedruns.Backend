@@ -6,7 +6,7 @@ using System.Net;
 using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Models;
 
-namespace Speedruns.Backend.Tests
+namespace Speedruns.Backend.Tests.Controllers
 {
     public class ConsoleControllerTests
     {
@@ -48,8 +48,8 @@ namespace Speedruns.Backend.Tests
             var response = await controller.GetAll();
 
             var result = response.Result as StatusCodeResult;
-            
-         
+
+
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
