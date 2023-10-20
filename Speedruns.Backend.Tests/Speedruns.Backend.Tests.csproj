@@ -32,8 +32,4 @@
     <ProjectReference Include="..\Speedruns.Backend\Speedruns.Backend.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
