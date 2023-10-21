@@ -1,28 +1,31 @@
-﻿
-
-using NSubstitute;
-using Speedruns.Backend.Interfaces;
-using Speedruns.Backend.Entities;
+﻿using Speedruns.Backend.Entities;
+using Speedruns.Backend.Tests.Database;
+using Speedruns.Backend.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
     public class ConsoleRepositoryTests
     {
+        private DbContextMock<ConsoleEntity> _dbContextMock;
+        private ConsolesRepository _consoleRepository;
+
+        public ConsoleRepositoryTests()
+        {
+            _dbContextMock = new DbContextMock<ConsoleEntity>(new List<ConsoleEntity>
+        {
+            new ConsoleEntity { Id = 1, Name = "Console 1" },
+            new ConsoleEntity { Id = 2, Name = "Console 2" },
+        });
+            _consoleRepository = new ConsolesRepository(_dbContextMock.Context);
+        }
+
         [Fact]
         public async Task ShouldReturnListOfConsoles()
         {
-            var repositoryMock = Substitute.For<IConsolesRepository>();
+            var consoles = await _consoleRepository.GetAll();
 
-            repositoryMock.GetAll().Returns(new List<ConsoleEntity>() { new ConsoleEntity
-            {
-                Id = 1,
-                Name = "DummyConsole",
-            }
-            });
-
-            var consoles = await repositoryMock.GetAll();
-
-            Assert.IsType<List<ConsoleEntity>>(consoles);
+            Assert.Equal(2, consoles.Count);
         }
     }
+
 }
