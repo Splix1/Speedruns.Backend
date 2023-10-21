@@ -7,7 +7,7 @@ namespace Speedruns.Backend.Repositories
     public class RunRepository : IRunRepository
     {
         private readonly SpeedrunsContext _context;
-        private readonly DbSet<RunModel> _runs;
+        private readonly DbSet<RunEntity> _runs;
 
         public RunRepository(SpeedrunsContext context)
         {
@@ -15,22 +15,22 @@ namespace Speedruns.Backend.Repositories
             _runs = context.Runs;
         }
 
-        public async Task<List<RunModel>> GetAll()
+        public async Task<List<RunEntity>> GetAll()
         {
             return await _runs.Include(x => x.Game).ThenInclude(x => x.Series).Include(x => x.Console).ToListAsync();
         }
 
-        public async Task<RunModel> GetById(long id)
+        public async Task<RunEntity> GetById(long id)
         {
             return await _runs.Where(x => x.Id == id).Include(x => x.Game).ThenInclude(x => x.Series).Include(x => x.Console).FirstOrDefaultAsync();
         }
 
-        public async Task<List<RunModel>> GetUserRuns(long? id)
+        public async Task<List<RunEntity>> GetUserRuns(long? id)
         {
             return await _runs.Where(run => run.UserId == id).Include(x => x.Game).ThenInclude(x => x.Series).Include(x => x.Console).ToListAsync();
         }
 
-        public async Task<RunModel> CreateRun(RunModel run)
+        public async Task<RunEntity> CreateRun(RunEntity run)
         {
             var game = await _context.Games.FindAsync(run.GameId);
             game.RunsPublished++;
@@ -50,7 +50,7 @@ namespace Speedruns.Backend.Repositories
             return run;
         }
 
-        public async Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run)
+        public async Task<RunEntity> UpdateRun(RunEntity runToUpdate, RunEntity run)
         {
             
             runToUpdate.Date = run.Date;
@@ -60,7 +60,7 @@ namespace Speedruns.Backend.Repositories
             return runToUpdate;
         }
 
-        public async Task DeleteRun(RunModel run)
+        public async Task DeleteRun(RunEntity run)
         {
             var game = await _context.Games.FindAsync(run.GameId);
             game.RunsPublished--;

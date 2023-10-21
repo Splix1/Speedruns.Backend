@@ -16,7 +16,7 @@ namespace Speedruns.Backend.Tests.Controllers
             // create mock of repository
             var repositoryMock = Substitute.For<IConsolesRepository>();
 
-            repositoryMock.GetAll().Returns(new List<ConsoleModel>() { new ConsoleModel
+            repositoryMock.GetAll().Returns(new List<ConsoleEntity>() { new ConsoleEntity
             {
                 Id = 1,
                 Name = "DummyConsole",

@@ -15,7 +15,7 @@ namespace Speedruns.Backend.Controllers
             _series = series;
         }
 
-        public async Task<ActionResult<List<SeriesModel>>> GetAll()
+        public async Task<ActionResult<List<SeriesEntity>>> GetAll()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Speedruns.Backend.Controllers
             }
         }
 
-        public async Task<ActionResult<SeriesModel>> GetById(long id)
+        public async Task<ActionResult<SeriesEntity>> GetById(long id)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace Speedruns.Backend.Controllers
         }
 
 
-        public async Task<ActionResult<SeriesModel>> GetByName(string name)
+        public async Task<ActionResult<SeriesEntity>> GetByName(string name)
         {
             try
             {

@@ -1,12 +1,12 @@
 ﻿namespace Speedruns.Backend.Models
 {
-    public class SeriesModel : BaseModel
+    public class SeriesEntity : BaseEntity
     {
         public string Name { get; set; }
         public int Players { get; set; }
 
         public string? ImageUrl { get; set; }
 
-        public List<GameModel> Games { get; set; } = new List<GameModel>();
+        public List<GameEntity> Games { get; set; } = new List<GameEntity>();
     }
 }

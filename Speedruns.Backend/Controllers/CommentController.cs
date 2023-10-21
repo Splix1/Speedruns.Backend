@@ -17,7 +17,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/comments/{runId}
         [HttpGet("{runId}")]
-        public async Task<ActionResult<List<CommentModel>>> GetAll(long runId)
+        public async Task<ActionResult<List<CommentEntity>>> GetAll(long runId)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Speedruns.Backend.Controllers
 
         // POST: /api/comments
         [HttpPost]
-        public async Task<ActionResult<CommentModel>> AddComment(CommentModel comment)
+        public async Task<ActionResult<CommentEntity>> AddComment(CommentEntity comment)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace Speedruns.Backend.Controllers
 
         // PUT: /api/comments/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<CommentModel>> UpdateComment(CommentModel comment)
+        public async Task<ActionResult<CommentEntity>> UpdateComment(CommentEntity comment)
         {
             try
             {

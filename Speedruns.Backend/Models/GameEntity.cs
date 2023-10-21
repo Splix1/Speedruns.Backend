@@ -1,6 +1,6 @@
 ﻿namespace Speedruns.Backend.Models
 {
-    public class GameModel : BaseModel
+    public class GameEntity : BaseEntity
     {
         public string Name { get; set; }
         public string ImageUrl { get; set; }
@@ -9,8 +9,8 @@
         public int RunsPublished { get; set; }
         public long? SeriesId { get; set; }
 
-        public List<GameConsoleModel> GameConsoles { get; set; } = new List<GameConsoleModel>();
-        public List<RunModel> Runs { get; set; } = new List<RunModel>();
-        public SeriesModel Series { get; set; }
+        public List<GameConsoleEntity> GameConsoles { get; set; } = new List<GameConsoleEntity>();
+        public List<RunEntity> Runs { get; set; } = new List<RunEntity>();
+        public SeriesEntity Series { get; set; }
     }
 }

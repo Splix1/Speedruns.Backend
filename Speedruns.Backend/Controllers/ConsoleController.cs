@@ -17,7 +17,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/consoles
         [HttpGet]
-        public async Task<ActionResult<List<ConsoleModel>>> GetAll()
+        public async Task<ActionResult<List<ConsoleEntity>>> GetAll()
         {
             try
             {

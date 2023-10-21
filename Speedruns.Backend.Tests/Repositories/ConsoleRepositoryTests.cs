@@ -13,7 +13,7 @@ namespace Speedruns.Backend.Tests.Repositories
         {
             var repositoryMock = Substitute.For<IConsolesRepository>();
 
-            repositoryMock.GetAll().Returns(new List<ConsoleModel>() { new ConsoleModel
+            repositoryMock.GetAll().Returns(new List<ConsoleEntity>() { new ConsoleEntity
             {
                 Id = 1,
                 Name = "DummyConsole",
@@ -22,7 +22,7 @@ namespace Speedruns.Backend.Tests.Repositories
 
             var consoles = await repositoryMock.GetAll();
 
-            Assert.IsType<List<ConsoleModel>>(consoles);
+            Assert.IsType<List<ConsoleEntity>>(consoles);
         }
     }
 }

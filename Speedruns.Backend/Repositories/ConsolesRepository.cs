@@ -6,12 +6,12 @@ namespace Speedruns.Backend.Repositories
 {
     public class ConsolesRepository : IConsolesRepository
     {
-        private readonly DbSet<ConsoleModel> _consoles;
+        private readonly DbSet<ConsoleEntity> _consoles;
         public ConsolesRepository(SpeedrunsContext context)
         {
             _consoles = context.Consoles;
         }
-        public async Task<List<ConsoleModel>> GetAll()
+        public async Task<List<ConsoleEntity>> GetAll()
         {
             return await _consoles.ToListAsync();
         }

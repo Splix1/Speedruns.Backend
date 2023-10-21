@@ -4,6 +4,6 @@ namespace Speedruns.Backend.Interfaces
 {
     public interface IConsolesRepository
     {
-        public Task<List<ConsoleModel>> GetAll();
+        public Task<List<ConsoleEntity>> GetAll();
     }
 }

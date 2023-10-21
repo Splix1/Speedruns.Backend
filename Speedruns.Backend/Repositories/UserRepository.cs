@@ -7,7 +7,7 @@ namespace Speedruns.Backend.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly SpeedrunsContext _context;
-        private readonly DbSet<UserModel> _users;
+        private readonly DbSet<UserEntity> _users;
 
         public UserRepository(SpeedrunsContext context)
         {
@@ -15,22 +15,22 @@ namespace Speedruns.Backend.Repositories
             _users = context.Users;
         }
 
-        public async Task<List<UserModel>> GetAll()
+        public async Task<List<UserEntity>> GetAll()
         {
             return await _users.Include(x => x.Runs).ToListAsync();
         }
 
-        public async Task<UserModel> GetById(long id)
+        public async Task<UserEntity> GetById(long id)
         {
             return await _users.Include(x => x.Runs).FirstAsync(x => x.Id == id);
         }
 
-        public async Task<UserModel> GetByName(string username)
+        public async Task<UserEntity> GetByName(string username)
         {
             return await _users.FirstOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task<UserModel> CreateUser(UserModel user)
+        public async Task<UserEntity> CreateUser(UserEntity user)
         {
            
             _users.Add(user);
@@ -39,7 +39,7 @@ namespace Speedruns.Backend.Repositories
             return user;
         }
 
-        public async Task UpdateUser(long id, UserModel user)
+        public async Task UpdateUser(long id, UserEntity user)
         {
 
             var userToUpdate = await _users.FindAsync(id);
@@ -52,7 +52,7 @@ namespace Speedruns.Backend.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteUser(UserModel user)
+        public async Task DeleteUser(UserEntity user)
         {
             // pull and update UserName column on runs upon user deletion
             var runs = _context.Runs.Where(x => x.UserId == user.Id);

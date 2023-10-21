@@ -1,6 +1,6 @@
 ﻿namespace Speedruns.Backend.Models
 {
-    public class RunModel : BaseModel
+    public class RunEntity : BaseEntity
     {
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public long? UserId { get; set; }
@@ -9,9 +9,9 @@
         public long Time {  get; set; }
         public string? UserName { get; set; }
 
-        public UserModel User { get; set; }
-        public ConsoleModel Console { get; set; }
-        public GameModel Game { get; set; }
-        public List<CommentModel> Comments { get; set; } = new List<CommentModel>();
+        public UserEntity User { get; set; }
+        public ConsoleEntity Console { get; set; }
+        public GameEntity Game { get; set; }
+        public List<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
     }
 }

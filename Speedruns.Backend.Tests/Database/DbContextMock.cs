@@ -6,7 +6,7 @@ using Speedruns.Backend.Models;
 
 namespace Speedruns.Backend.Tests.Database
 {
-    public class DbContextMock<TEntity> where TEntity : BaseModel, new ()
+    public class DbContextMock<TEntity> where TEntity : BaseEntity, new ()
     {
         private readonly DbContext _context;
         private readonly DbSetMock<TEntity> _dbSet;
