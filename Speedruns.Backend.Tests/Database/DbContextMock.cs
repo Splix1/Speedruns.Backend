@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using Speedruns.Backend.Entities;
 
@@ -8,7 +6,7 @@ namespace Speedruns.Backend.Tests.Database
 {
     public class DbContextMock<TEntity> where TEntity : BaseEntity, new ()
     {
-        private readonly DbContext _context;
+        private readonly SpeedrunsContext _context;
         private readonly DbSetMock<TEntity> _dbSet;
 
         public DbContextMock() : this(new List<TEntity>()) { }
@@ -17,8 +15,10 @@ namespace Speedruns.Backend.Tests.Database
         {
             _dbSet = new DbSetMock<TEntity>(entities);
 
-            _context = Substitute.For<DbContext>();
-            _context.Set<TEntity>().Returns(_dbSet.BaseEntities);
+            _context = Substitute.For<SpeedrunsContext>();
+            _context
+                .Set<TEntity>()
+                .Returns(_dbSet.BaseEntities);
         }
 
         public DbContext Context => _context;
