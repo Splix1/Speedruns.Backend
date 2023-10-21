@@ -1,4 +1,4 @@
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 using Speedruns.Backend.Interfaces;
 using Speedruns.Backend.Repositories;

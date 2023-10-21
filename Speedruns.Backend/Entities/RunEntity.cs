@@ -1,4 +1,4 @@
-﻿namespace Speedruns.Backend.Models
+﻿namespace Speedruns.Backend.Entities
 {
     public class RunEntity : BaseEntity
     {

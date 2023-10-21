@@ -2,7 +2,7 @@
 
 using NSubstitute;
 using Speedruns.Backend.Interfaces;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Tests.Repositories
 {

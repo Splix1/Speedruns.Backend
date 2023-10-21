@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Speedruns.Backend.Interfaces;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Controllers
 {

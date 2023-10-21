@@ -4,7 +4,7 @@ using Speedruns.Backend.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using NSubstitute.ExceptionExtensions;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Tests.Controllers
 {

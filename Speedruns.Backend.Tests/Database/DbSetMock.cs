@@ -3,7 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.NSubstitute;
 using NSubstitute;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Tests.Database
 {

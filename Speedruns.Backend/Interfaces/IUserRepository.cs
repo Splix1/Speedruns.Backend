@@ -1,4 +1,4 @@
-﻿using Speedruns.Backend.Models;
+﻿using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Interfaces
 {
