@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
 
 namespace Speedruns.Backend.Controllers
@@ -17,7 +17,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/games
         [HttpGet]
-        public async Task<ActionResult<List<GameModel>>> GetAll()
+        public async Task<ActionResult<List<GameEntity>>> GetAll()
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/games/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<GameModel>> GetById(long id)
+        public async Task<ActionResult<GameEntity>> GetById(long id)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/games/{name}
         [HttpGet("{name}")]
-        public async Task<ActionResult<GameModel>> GetByName(string name)
+        public async Task<ActionResult<GameEntity>> GetByName(string name)
         {
             try
             {

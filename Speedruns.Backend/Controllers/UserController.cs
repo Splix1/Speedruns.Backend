@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
 
 namespace Speedruns.Backend.Controllers
@@ -19,7 +19,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/users
         [HttpGet]
-        public async Task<ActionResult<List<UserModel>>> GetAll()
+        public async Task<ActionResult<List<UserEntity>>> GetAll()
         {
             try
             { 
@@ -35,7 +35,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/users/id
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserModel>> GetById(long id)
+        public async Task<ActionResult<UserEntity>> GetById(long id)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace Speedruns.Backend.Controllers
 
         // POST: /api/users
         [HttpPost]
-        public async Task<ActionResult<UserModel>> CreateUser(UserModel user)
+        public async Task<ActionResult<UserEntity>> CreateUser(UserEntity user)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace Speedruns.Backend.Controllers
 
         // PUT: /api/users/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<UserModel>> UpdateUser(long id, UserModel user)
+        public async Task<ActionResult<UserEntity>> UpdateUser(long id, UserEntity user)
         {
             try
             {

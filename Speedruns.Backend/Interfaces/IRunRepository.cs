@@ -1,14 +1,14 @@
-﻿using Speedruns.Backend.Models;
+﻿using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Interfaces
 {
     public interface IRunRepository
     {
-        Task<List<RunModel>> GetAll();
-        Task<RunModel> GetById(long id);
-        Task<List<RunModel>> GetUserRuns(long? id);
-        Task<RunModel> CreateRun(RunModel run);
-        Task<RunModel> UpdateRun(RunModel runToUpdate, RunModel run);
-        Task DeleteRun(RunModel run);
+        Task<List<RunEntity>> GetAll();
+        Task<RunEntity> GetById(long id);
+        Task<List<RunEntity>> GetUserRuns(long? id);
+        Task<RunEntity> CreateRun(RunEntity run);
+        Task<RunEntity> UpdateRun(RunEntity runToUpdate, RunEntity run);
+        Task DeleteRun(RunEntity run);
     }
 }

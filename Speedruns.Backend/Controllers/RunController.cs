@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Speedruns.Backend.Interfaces;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Controllers
 {
@@ -17,7 +17,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/runs
         [HttpGet]
-        public async Task<ActionResult<List<RunModel>>> GetAll()
+        public async Task<ActionResult<List<RunEntity>>> GetAll()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/runs/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<RunModel>> GetById(long id)
+        public async Task<ActionResult<RunEntity>> GetById(long id)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Speedruns.Backend.Controllers
 
         // POST: /api/runs
         [HttpPost]
-        public async Task<ActionResult<RunModel>> CreateRun(RunModel run)
+        public async Task<ActionResult<RunEntity>> CreateRun(RunEntity run)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace Speedruns.Backend.Controllers
 
         // PUT: /api/runs/{id}
         [HttpPut("{id}")]
-        public async Task<ActionResult<RunModel>> UpdateRun(long id, RunModel run)
+        public async Task<ActionResult<RunEntity>> UpdateRun(long id, RunEntity run)
         {
             try
             {

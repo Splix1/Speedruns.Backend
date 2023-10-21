@@ -1,11 +1,11 @@
-﻿using Speedruns.Backend.Models;
+﻿using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Interfaces
 {
     public interface ISeriesRepository
     {
-        public Task<List<SeriesModel>> GetAll();
-        public Task<SeriesModel> GetById(long id);
-        public Task<SeriesModel> GetByName(string name);
+        public Task<List<SeriesEntity>> GetAll();
+        public Task<SeriesEntity> GetById(long id);
+        public Task<SeriesEntity> GetByName(string name);
     }
 }

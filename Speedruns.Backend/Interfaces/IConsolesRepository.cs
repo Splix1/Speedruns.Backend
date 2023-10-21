@@ -1,9 +1,9 @@
-﻿using Speedruns.Backend.Models;
+﻿using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Interfaces
 {
     public interface IConsolesRepository
     {
-        public Task<List<ConsoleModel>> GetAll();
+        public Task<List<ConsoleEntity>> GetAll();
     }
 }

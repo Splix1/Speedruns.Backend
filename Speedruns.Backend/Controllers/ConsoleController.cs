@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
 
 namespace Speedruns.Backend.Controllers
@@ -17,7 +17,7 @@ namespace Speedruns.Backend.Controllers
 
         // GET: /api/consoles
         [HttpGet]
-        public async Task<ActionResult<List<ConsoleModel>>> GetAll()
+        public async Task<ActionResult<List<ConsoleEntity>>> GetAll()
         {
             try
             {

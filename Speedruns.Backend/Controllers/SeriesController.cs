@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Speedruns.Backend.Interfaces;
-using Speedruns.Backend.Models;
+using Speedruns.Backend.Entities;
 
 namespace Speedruns.Backend.Controllers
 {
@@ -15,7 +15,8 @@ namespace Speedruns.Backend.Controllers
             _series = series;
         }
 
-        public async Task<ActionResult<List<SeriesModel>>> GetAll()
+        [HttpGet]
+        public async Task<ActionResult<List<SeriesEntity>>> GetAll()
         {
             try
             {
@@ -32,7 +33,8 @@ namespace Speedruns.Backend.Controllers
             }
         }
 
-        public async Task<ActionResult<SeriesModel>> GetById(long id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SeriesEntity>> GetById(long id)
         {
             try
             {
@@ -52,7 +54,8 @@ namespace Speedruns.Backend.Controllers
         }
 
 
-        public async Task<ActionResult<SeriesModel>> GetByName(string name)
+        [HttpGet("{name}")]
+        public async Task<ActionResult<SeriesEntity>> GetByName(string name)
         {
             try
             {
