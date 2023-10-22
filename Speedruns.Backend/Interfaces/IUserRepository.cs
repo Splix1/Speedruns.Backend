@@ -8,7 +8,7 @@ namespace Speedruns.Backend.Interfaces
         Task<UserEntity> GetById(long id);
         Task<UserEntity> GetByName(string name);
         Task<UserEntity> CreateUser(UserEntity user);
-        Task UpdateUser(long id, UserEntity user);
+        Task<UserEntity> UpdateUser(long id, UserEntity user);
 
         Task DeleteUser(UserEntity user);
     }

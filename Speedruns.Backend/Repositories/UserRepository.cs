@@ -39,7 +39,7 @@ namespace Speedruns.Backend.Repositories
             return user;
         }
 
-        public async Task UpdateUser(long id, UserEntity user)
+        public async Task<UserEntity> UpdateUser(long id, UserEntity user)
         {
 
             var userToUpdate = await _users.FindAsync(id);
@@ -50,6 +50,8 @@ namespace Speedruns.Backend.Repositories
             userToUpdate.TwitchLink = user.TwitchLink;
 
             await _context.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task DeleteUser(UserEntity user)

@@ -68,7 +68,7 @@ namespace Speedruns.Backend.Controllers
 
                 await _users.CreateUser(user);
 
-                return CreatedAtAction(nameof(GetById), new { id =  user.Id }, user);
+                return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
             }
             catch(Exception ex)
             {
@@ -96,7 +96,7 @@ namespace Speedruns.Backend.Controllers
 
                 await _users.UpdateUser(id, user);
 
-                return Ok(await _users.GetById(id));
+                return Ok(user);
             }
              catch(Exception ex)
             {
