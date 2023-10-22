@@ -96,9 +96,6 @@ namespace Speedruns.Backend.Tests.Controllers
         {
             var repositoryMock = Substitute.For<IUserRepository>();
 
-            repositoryMock.GetById(Arg.Any<long>()).Returns(callInfo => (UserEntity)null!);
-
-
             var controller = new UserController(repositoryMock);
 
             var response = await controller.GetById(1);
