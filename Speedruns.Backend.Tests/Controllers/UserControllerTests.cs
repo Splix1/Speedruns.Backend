@@ -154,5 +154,25 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn500UpdateUser()
+        {
+            var repositoryMockWithError = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            repositoryMockWithError.GetById(Arg.Any<long>()).Returns(mockUser);
+            repositoryMockWithError.UpdateUser(Arg.Any<long>(), Arg.Any<UserEntity>()).ThrowsAsync(new Exception("Internal error"));
+
+            var controller = new UserController(repositoryMockWithError);
+
+            var response = await controller.UpdateUser(mockUser.Id, mockUser);
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
     }
 }
