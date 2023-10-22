@@ -205,6 +205,7 @@ namespace Speedruns.Backend.Tests.Controllers
 
             var mockUser = new UserEntity { Id = 1, UserName = "Test" };
 
+            repositoryMockWithError.GetById(Arg.Any<long>()).Returns(mockUser);
             repositoryMockWithError.DeleteUser(Arg.Any<UserEntity>()).ThrowsAsync(new Exception("Internal error"));
 
             var controller = new UserController(repositoryMockWithError);
