@@ -22,7 +22,7 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<UserEntity> GetById(long id)
         {
-            return await _users.Include(x => x.Runs).FirstAsync(x => x.Id == id);
+            return await _users.Include(x => x.Runs).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<UserEntity> GetByName(string username)

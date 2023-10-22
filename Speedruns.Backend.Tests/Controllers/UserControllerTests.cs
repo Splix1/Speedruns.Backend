@@ -14,12 +14,7 @@ namespace Speedruns.Backend.Tests.Controllers
     public class UserControllerTests
     {
 
-        private readonly ITestOutputHelper output;
-
-        public UserControllerTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
+        
 
         [Fact]
         public async Task ShouldReturn200GetAll()
@@ -94,6 +89,25 @@ namespace Speedruns.Backend.Tests.Controllers
 
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404GetById()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            repositoryMock.GetById(Arg.Any<long>()).Returns(callInfo => (UserEntity)null!);
+
+
+            var controller = new UserController(repositoryMock);
+
+            var response = await controller.GetById(1);
+
+            var result = response.Result as NotFoundObjectResult;            
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+
         }
 
         [Fact]
@@ -174,5 +188,47 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn200DeleteUser()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            repositoryMock.GetById(Arg.Any<long>()).Returns(mockUser);
+
+
+            var controller = new UserController(repositoryMock);
+
+            var response = await controller.DeleteUser(mockUser.Id);
+           
+            var result = response as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500DeleteUser()
+        {
+            var repositoryMockWithError = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            repositoryMockWithError.GetById(Arg.Any<long>()).Returns(mockUser);
+            repositoryMockWithError.DeleteUser(Arg.Any<UserEntity>()).ThrowsAsync(new Exception("Internal error"));
+
+            var controller = new UserController(repositoryMockWithError);
+
+            var response = await controller.DeleteUser(mockUser.Id);
+
+            var result = response as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+
+        }
+
     }
 }
