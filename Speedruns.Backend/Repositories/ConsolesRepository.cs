@@ -9,7 +9,7 @@ namespace Speedruns.Backend.Repositories
         private readonly DbSet<ConsoleEntity> _consoles;
         public ConsolesRepository(SpeedrunsContext context)
         {
-            _consoles = context.Consoles;
+            _consoles = context.Set<ConsoleEntity>();
         }
         public async Task<List<ConsoleEntity>> GetAll()
         {

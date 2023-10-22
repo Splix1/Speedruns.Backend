@@ -4,6 +4,10 @@ namespace Speedruns.Backend.Entities
 {
     public class SpeedrunsContext: DbContext
     {
+        public SpeedrunsContext()
+        {
+        }
+
         public SpeedrunsContext(DbContextOptions<SpeedrunsContext> options): base(options)
         {
         }

@@ -21,7 +21,7 @@ namespace Speedruns.Backend.Tests.Database
                 .Returns(_dbSet.BaseEntities);
         }
 
-        public DbContext Context => _context;
+        public SpeedrunsContext Context => _context;
 
         public DbSet<TEntity> BaseEntities => _dbSet.BaseEntities;
     }

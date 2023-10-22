@@ -12,10 +12,10 @@ namespace Speedruns.Backend.Tests.Repositories
         public ConsoleRepositoryTests()
         {
             _dbContextMock = new DbContextMock<ConsoleEntity>(new List<ConsoleEntity>
-        {
-            new ConsoleEntity { Id = 1, Name = "Console 1" },
-            new ConsoleEntity { Id = 2, Name = "Console 2" },
-        });
+            {
+                new ConsoleEntity { Id = 1, Name = "Console 1" },
+                new ConsoleEntity { Id = 2, Name = "Console 2" },
+            });
             _consoleRepository = new ConsolesRepository(_dbContextMock.Context);
         }
 
