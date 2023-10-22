@@ -40,7 +40,14 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                return Ok(await _users.GetById(id));
+                var user = await _users.GetById(id);
+
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+                return Ok(user);
             }
             catch(Exception ex)
             {
