@@ -7,11 +7,20 @@ using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
 using System.Net;
+using Xunit.Abstractions;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
     public class UserControllerTests
     {
+
+        private readonly ITestOutputHelper output;
+
+        public UserControllerTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
@@ -94,11 +103,7 @@ namespace Speedruns.Backend.Tests.Controllers
 
             var mockUser = new UserEntity { UserName = "Test" };
 
-            repositoryMock.CreateUser(mockUser).Returns(new UserEntity()
-            {
-                Id = 1,
-                UserName = "Test",
-            });
+            repositoryMock.CreateUser(mockUser).Returns(mockUser);
 
             var controller = new UserController(repositoryMock);
 
@@ -127,6 +132,27 @@ namespace Speedruns.Backend.Tests.Controllers
 
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn200UpdateUser()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            repositoryMock.GetById(Arg.Any<long>()).Returns(mockUser);
+            repositoryMock.UpdateUser(Arg.Any<long>(), Arg.Any<UserEntity>()).Returns(callInfo => callInfo.Arg<UserEntity>());
+
+            var controller = new UserController(repositoryMock);
+           
+            var response = await controller.UpdateUser(mockUser.Id, mockUser);
+
+            var result = response.Result as OkObjectResult;
+
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
     }
 }
