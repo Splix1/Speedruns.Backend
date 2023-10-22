@@ -87,6 +87,46 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
-      
+        [Fact]
+        public async Task ShouldReturn201CreateUser()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { UserName = "Test" };
+
+            repositoryMock.CreateUser(mockUser).Returns(new UserEntity()
+            {
+                Id = 1,
+                UserName = "Test",
+            });
+
+            var controller = new UserController(repositoryMock);
+
+            var response = await controller.CreateUser(mockUser);
+
+            var result = response.Result as CreatedAtActionResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.Created, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500CreateUser()
+        {
+            var repositoryMockWithError = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { UserName = "Test" };
+
+            repositoryMockWithError.CreateUser(mockUser).ThrowsAsync(new Exception("Internal error"));
+
+            var controller = new UserController(repositoryMockWithError);
+
+            var response = await controller.CreateUser(mockUser);
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
     }
 }
