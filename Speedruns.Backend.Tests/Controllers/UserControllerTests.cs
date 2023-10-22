@@ -86,5 +86,7 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+      
     }
 }
