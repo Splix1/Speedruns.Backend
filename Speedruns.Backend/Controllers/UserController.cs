@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
 
@@ -66,8 +67,8 @@ namespace Speedruns.Backend.Controllers
                 }
 
                 await _users.CreateUser(user);
-                
-                return Ok(await _users.GetByName(user.UserName));
+
+                return CreatedAtAction(nameof(GetById), new { id =  user.Id }, user);
             }
             catch(Exception ex)
             {
