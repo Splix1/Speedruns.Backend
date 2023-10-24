@@ -29,5 +29,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.True(users.First().Runs.Any());
             Assert.Equal(2, users.Count);
         }
+
+        [Fact]
+        public async Task ShouldReturnUserById()
+        {
+            var user = await _userRepository.GetById(1);
+
+            Assert.NotNull(user);
+            Assert.True(user.Runs.Any());
+            Assert.Equal(1, user.Id);
+        }
     }
 }
