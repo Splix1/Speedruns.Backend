@@ -26,6 +26,7 @@ namespace Speedruns.Backend.Tests.Repositories
             var users = await _userRepository.GetAll();
 
             Assert.NotNull(users);
+            Assert.IsType<List<UserEntity>>(users);
             Assert.True(users.First().Runs.Any());
             Assert.Equal(2, users.Count);
         }
@@ -36,6 +37,7 @@ namespace Speedruns.Backend.Tests.Repositories
             var user = await _userRepository.GetById(1);
 
             Assert.NotNull(user);
+            Assert.IsType<UserEntity>(user);
             Assert.True(user.Runs.Any());
             Assert.Equal(1, user.Id);
         }
@@ -54,6 +56,7 @@ namespace Speedruns.Backend.Tests.Repositories
             var user = await _userRepository.GetByName("Test 1");
 
             Assert.NotNull(user);
+            Assert.IsType<UserEntity>(user);
             Assert.Equal("Test 1", user.UserName);
             Assert.True(user.Runs.Any());
         }
