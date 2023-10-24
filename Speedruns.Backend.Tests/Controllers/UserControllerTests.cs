@@ -244,7 +244,22 @@ namespace Speedruns.Backend.Tests.Controllers
 
         }
 
-       
+        [Fact]
+        public async Task ShouldReturn404DeleteUser()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            var controller = new UserController(repositoryMock);
+
+            var response = await controller.DeleteUser(mockUser.Id);
+
+            var result = response as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
 
     }
 }
