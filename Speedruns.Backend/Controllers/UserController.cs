@@ -121,7 +121,7 @@ namespace Speedruns.Backend.Controllers
                 var user = await _users.GetById(id);
                 if (user == null)
                 { 
-                    return NotFound(); 
+                    return NotFound("User not found."); 
                 }
 
                 await _users.DeleteUser(user);

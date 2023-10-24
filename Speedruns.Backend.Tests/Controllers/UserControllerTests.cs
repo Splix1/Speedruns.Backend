@@ -187,6 +187,23 @@ namespace Speedruns.Backend.Tests.Controllers
         }
 
         [Fact]
+        public async Task ShouldReturn404UpdateUser()
+        {
+            var repositoryMockWithError = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            var controller = new UserController(repositoryMockWithError);
+
+            var response = await controller.UpdateUser(mockUser.Id, mockUser);
+
+            var result = response.Result as NotFoundObjectResult; 
+            
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Fact]
         public async Task ShouldReturn200DeleteUser()
         {
             var repositoryMock = Substitute.For<IUserRepository>();
@@ -225,6 +242,23 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
 
+        }
+
+        [Fact]
+        public async Task ShouldReturn404DeleteUser()
+        {
+            var repositoryMock = Substitute.For<IUserRepository>();
+
+            var mockUser = new UserEntity { Id = 1, UserName = "Test" };
+
+            var controller = new UserController(repositoryMock);
+
+            var response = await controller.DeleteUser(mockUser.Id);
+
+            var result = response as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
 
     }
