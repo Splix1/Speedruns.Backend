@@ -44,6 +44,11 @@ namespace Speedruns.Backend.Repositories
 
             var userToUpdate = await _users.FindAsync(id);
 
+            if (userToUpdate == null)
+            {
+                return null;
+            }
+
             userToUpdate.UserName = user.UserName;
             userToUpdate.ImageUrl = user.ImageUrl;
             userToUpdate.YoutubeLink = user.YoutubeLink;

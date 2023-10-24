@@ -94,5 +94,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(1, updatedUser.Id);
             Assert.Equal("Testing 1", updatedUser.UserName);
         }
+
+        [Fact]
+        public async Task ShouldReturnNullUpdatedUser()
+        {
+            var user = new UserEntity { Id = 100, UserName = "Testing 100" };
+
+            var updatedUser = await _userRepository.UpdateUser(user.Id, user);
+
+            Assert.Null(updatedUser);
+        }
     }
 }
