@@ -104,5 +104,17 @@ namespace Speedruns.Backend.Tests.Repositories
 
             Assert.Null(updatedUser);
         }
+
+        [Fact]
+        public async Task ShouldDeleteUser()
+        {
+            var userToDelete = await _userRepository.GetById(1);
+
+            await _userRepository.DeleteUser(userToDelete);
+
+            var deletedUser = await _userRepository.GetById(1);
+
+            Assert.Null(deletedUser);
+        }
     }
 }

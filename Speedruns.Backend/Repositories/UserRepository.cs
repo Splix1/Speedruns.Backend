@@ -8,11 +8,13 @@ namespace Speedruns.Backend.Repositories
     {
         private readonly SpeedrunsContext _context;
         private readonly DbSet<UserEntity> _users;
+        private readonly DbSet<RunEntity> _runs;
 
         public UserRepository(SpeedrunsContext context)
         {
             _context = context;
             _users = context.Set<UserEntity>();
+            _runs = context.Set<RunEntity>();
         }
 
         public async Task<List<UserEntity>> GetAll()
@@ -62,14 +64,14 @@ namespace Speedruns.Backend.Repositories
         public async Task DeleteUser(UserEntity user)
         {
             // pull and update UserName column on runs upon user deletion
-            var runs = _context.Runs.Where(x => x.UserId == user.Id);
+            var runs = _runs.AsQueryable().Where(x => x.UserId == user.Id);
 
-            foreach (var run in runs)
+            foreach(var run in runs)
             {
                 run.UserName = user.UserName;
             }
-
-            _context.Users.Remove(user);
+           
+            _users.Remove(user);
             await _context.SaveChangesAsync();
         }
     }
