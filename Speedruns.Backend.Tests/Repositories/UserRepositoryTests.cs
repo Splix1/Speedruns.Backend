@@ -66,6 +66,17 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Null(user);
         }
 
+        [Fact]
+        public async Task ShouldReturnCreatedUser()
+        {
+            var user = new UserEntity { Id = 3, UserName = "Test 3" };
 
+            var createdUser = await _userRepository.CreateUser(user);
+
+            Assert.NotNull(createdUser);
+            Assert.IsType<UserEntity>(createdUser);
+            Assert.Equal(3, createdUser.Id);
+            Assert.Equal("Test 3", createdUser.UserName);
+        }
     }
 }
