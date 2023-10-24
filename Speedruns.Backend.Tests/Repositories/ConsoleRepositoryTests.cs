@@ -24,6 +24,8 @@ namespace Speedruns.Backend.Tests.Repositories
         {
             var consoles = await _consoleRepository.GetAll();
 
+            Assert.NotNull(consoles);
+            Assert.IsType<List<ConsoleEntity>>(consoles);
             Assert.Equal(2, consoles.Count);
         }
     }

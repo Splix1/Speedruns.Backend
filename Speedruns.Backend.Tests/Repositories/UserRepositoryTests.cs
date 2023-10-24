@@ -81,5 +81,40 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(3, createdUser.Id);
             Assert.Equal("Test 3", createdUser.UserName);
         }
+
+        [Fact]
+        public async Task ShouldReturnUpdatedUser()
+        {
+            var user = new UserEntity { Id = 1, UserName = "Testing 1" };
+
+            var updatedUser = await _userRepository.UpdateUser(user.Id, user);
+
+            Assert.NotNull(updatedUser);
+            Assert.IsType<UserEntity>(updatedUser);
+            Assert.Equal(1, updatedUser.Id);
+            Assert.Equal("Testing 1", updatedUser.UserName);
+        }
+
+        [Fact]
+        public async Task ShouldReturnNullUpdatedUser()
+        {
+            var user = new UserEntity { Id = 100, UserName = "Testing 100" };
+
+            var updatedUser = await _userRepository.UpdateUser(user.Id, user);
+
+            Assert.Null(updatedUser);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteUser()
+        {
+            var userToDelete = await _userRepository.GetById(1);
+
+            await _userRepository.DeleteUser(userToDelete);
+
+            var deletedUser = await _userRepository.GetById(1);
+
+            Assert.Null(deletedUser);
+        }
     }
 }
