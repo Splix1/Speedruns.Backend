@@ -41,6 +41,14 @@ namespace Speedruns.Backend.Tests.Repositories
         }
 
         [Fact]
+        public async Task ShouldReturnNullUserById()
+        {
+            var user = await _userRepository.GetById(100);
+
+            Assert.Null(user);
+        }
+
+        [Fact]
         public async Task ShouldReturnUserByName()
         {
             var user = await _userRepository.GetByName("Test 1");
