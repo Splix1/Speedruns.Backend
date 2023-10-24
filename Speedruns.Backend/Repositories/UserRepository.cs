@@ -12,7 +12,7 @@ namespace Speedruns.Backend.Repositories
         public UserRepository(SpeedrunsContext context)
         {
             _context = context;
-            _users = context.Users;
+            _users = context.Set<UserEntity>();
         }
 
         public async Task<List<UserEntity>> GetAll()
@@ -51,7 +51,7 @@ namespace Speedruns.Backend.Repositories
 
             await _context.SaveChangesAsync();
 
-            return user;
+            return userToUpdate;
         }
 
         public async Task DeleteUser(UserEntity user)
