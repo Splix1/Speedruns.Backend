@@ -30,5 +30,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.IsType<List<RunEntity>>(runs);
             Assert.Equal(2, runs.Count);
         }
+
+        [Fact]
+        public async Task ShouldReturnRunById()
+        {
+            var run = await _runRepository.GetById(1);
+
+            Assert.NotNull(run);
+            Assert.IsType<RunEntity>(run);
+            Assert.Equal(1, run.Id);
+        }
     }
 }
