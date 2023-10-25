@@ -10,7 +10,6 @@ namespace Speedruns.Backend.Tests.Repositories
     {
         private DbContextMock<RunEntity> _dbContextMock;
         private RunRepository _runRepository;
-        private DbContextMock<GameEntity> _gamesDbContextMock;
         private IGamesRepository _gamesRepository;
 
         public RunRepositoryTests()
@@ -34,11 +33,6 @@ namespace Speedruns.Backend.Tests.Repositories
                 });
 
             _runRepository = new RunRepository(_dbContextMock.Context, _gamesRepository);
-
-            _gamesDbContextMock = new DbContextMock<GameEntity>(new List<GameEntity>
-            {
-                new GameEntity { Id = 1 }
-            });
         }
 
         [Fact]
