@@ -8,11 +8,15 @@ namespace Speedruns.Backend.Repositories
     {
         private readonly SpeedrunsContext _context;
         private readonly DbSet<RunEntity> _runs;
+        private readonly DbSet<GameEntity> _games;
+        private GamesRepository _gamesRepository;
 
         public RunRepository(SpeedrunsContext context)
         {
             _context = context;
-            _runs = context.Runs;
+            _runs = context.Set<RunEntity>();
+            _games = context.Set<GameEntity>();
+            _gamesRepository = new GamesRepository(context);
         }
 
         public async Task<List<RunEntity>> GetAll()
@@ -32,7 +36,12 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<RunEntity> CreateRun(RunEntity run)
         {
-            var game = await _context.Games.FindAsync(run.GameId);
+
+            var game = await _gamesRepository.GetById(run.GameId);
+            if(game == null)
+            {
+                return null;
+            }
             game.RunsPublished++;
             
             var userRuns = await GetUserRuns(run.UserId);

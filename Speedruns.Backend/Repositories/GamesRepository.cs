@@ -10,7 +10,7 @@ namespace Speedruns.Backend.Repositories
 
         public GamesRepository(SpeedrunsContext context)
         {
-            _games = context.Games;
+            _games = context.Set<GameEntity>();
         }
 
         public async Task<List<GameEntity>> GetAll()
@@ -20,7 +20,7 @@ namespace Speedruns.Backend.Repositories
 
         public async Task<GameEntity> GetById(long id)
         {
-            return await _games.Where(x => x.Id == id).Include(x => x.Series).Include(x => x.GameConsoles).ThenInclude(x => x.Console).FirstOrDefaultAsync();
+            return await _games.AsQueryable().Where(x => x.Id == id).Include(x => x.Series).Include(x => x.GameConsoles).ThenInclude(x => x.Console).FirstOrDefaultAsync();
         }
 
         public async Task<GameEntity> GetByName(string name)
