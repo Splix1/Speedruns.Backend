@@ -9,14 +9,14 @@ namespace Speedruns.Backend.Repositories
         private readonly SpeedrunsContext _context;
         private readonly DbSet<RunEntity> _runs;
         private readonly DbSet<GameEntity> _games;
-        private GamesRepository _gamesRepository;
+        private readonly IGamesRepository _gamesRepository;
 
-        public RunRepository(SpeedrunsContext context)
+        public RunRepository(SpeedrunsContext context, IGamesRepository gameRepository)
         {
             _context = context;
             _runs = context.Set<RunEntity>();
             _games = context.Set<GameEntity>();
-            _gamesRepository = new GamesRepository(context);
+            _gamesRepository = gameRepository;
         }
 
         public async Task<List<RunEntity>> GetAll()
