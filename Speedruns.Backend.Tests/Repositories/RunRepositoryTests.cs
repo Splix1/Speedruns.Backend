@@ -15,7 +15,7 @@ namespace Speedruns.Backend.Tests.Repositories
             _dbContextMock = new DbContextMock<RunEntity>(new List<RunEntity>
             {
                 new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123 },
-                new RunEntity { Id = 2, UserId = 2, GameId = 2, Time = 123 },
+                new RunEntity { Id = 2, UserId = 1, GameId = 2, Time = 123 },
             });
 
             _runRepository = new RunRepository(_dbContextMock.Context);
@@ -47,6 +47,16 @@ namespace Speedruns.Backend.Tests.Repositories
             var run = await _runRepository.GetById(100);
 
             Assert.Null(run);
+        }
+
+        [Fact]
+        public async Task ShouldReturnRunsByUser()
+        {
+            var runs = await _runRepository.GetUserRuns(1);
+
+            Assert.NotNull(runs);
+            Assert.IsType<List<RunEntity>>(runs);
+            Assert.Equal(2, runs.Count);
         }
     }
 }
