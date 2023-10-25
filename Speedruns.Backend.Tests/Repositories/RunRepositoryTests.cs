@@ -58,5 +58,13 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.IsType<List<RunEntity>>(runs);
             Assert.Equal(2, runs.Count);
         }
+
+        [Fact]
+        public async Task ShouldReturnEmptyListRunsByUser()
+        {
+            var runs = await _runRepository.GetUserRuns(100);
+
+            Assert.Empty(runs);
+        }
     }
 }
