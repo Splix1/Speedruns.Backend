@@ -16,7 +16,7 @@ namespace Speedruns.Backend.Tests.Repositories
         {
             _dbContextMock = new DbContextMock<RunEntity>(new List<RunEntity>
             {
-                new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123 },
+                new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123, Console = new ConsoleEntity { Name = "PlayStation 1" } },
                 new RunEntity { Id = 2, UserId = 1, GameId = 2, Time = 123 },
             });
 
@@ -97,6 +97,21 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(3, run.Id);
         }
 
-        
+        [Fact]
+        public async Task ShouldUpdateRun()
+        {
+            var newRun = new RunEntity { Id = 1, UserId = 1, GameId = 1, Console = new ConsoleEntity { Name = "PlayStation 2" } };
+
+            var runToUpdate = await _runRepository.GetById(newRun.Id);
+
+            await _runRepository.UpdateRun(runToUpdate, newRun);
+
+            var run = await _runRepository.GetById(1);
+
+            Assert.NotNull(run);
+            Assert.IsType<RunEntity>(run);
+            Assert.Equal(1, run.Id);
+            Assert.Equal("PlayStation 2", run.Console.Name);
+        }
     }
 }
