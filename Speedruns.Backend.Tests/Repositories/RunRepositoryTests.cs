@@ -85,7 +85,10 @@ namespace Speedruns.Backend.Tests.Repositories
         public async Task ShouldCreateRun()
         {
             var newRun = new RunEntity { Id = 3, GameId = 1, UserId = 1 };
-            await _runRepository.CreateRun(newRun);
+
+            var game = await _gamesRepository.GetById(newRun.GameId);
+
+            await _runRepository.CreateRun(newRun, game);
 
             var run = await _runRepository.GetById(newRun.Id);
 
@@ -94,14 +97,6 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(3, run.Id);
         }
 
-        [Fact]
-        public async Task ShouldReturnNullNoGameCreateRun()
-        {
-            var newRun = new RunEntity { Id = 3, GameId = 100, UserId = 1 };
-
-            var run = await _runRepository.CreateRun(newRun);
-
-            Assert.Null(run);
-        }
+        
     }
 }

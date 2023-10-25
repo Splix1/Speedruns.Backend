@@ -67,7 +67,7 @@ namespace Speedruns.Backend.Controllers
                     return NotFound("Game not found.");
                 }
 
-                return Ok(await _runs.CreateRun(run));
+                return Ok(await _runs.CreateRun(run, game));
             }
             catch (Exception ex)
             {
