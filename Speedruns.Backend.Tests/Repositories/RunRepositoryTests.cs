@@ -1,5 +1,4 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Interfaces;
 using Speedruns.Backend.Repositories;
 using Speedruns.Backend.Tests.Database;
 
@@ -9,6 +8,8 @@ namespace Speedruns.Backend.Tests.Repositories
     {
         private DbContextMock<RunEntity> _dbContextMock;
         private RunRepository _runRepository;
+        private DbContextMock<GameEntity> _gamesDbContextMock;
+        private GamesRepository _gamesRepository;
 
         public RunRepositoryTests()
         {
@@ -19,6 +20,14 @@ namespace Speedruns.Backend.Tests.Repositories
             });
 
             _runRepository = new RunRepository(_dbContextMock.Context);
+
+
+            _gamesDbContextMock = new DbContextMock<GameEntity>(new List<GameEntity>
+            {
+                new GameEntity { Id = 1 }
+            });
+
+            _gamesRepository = new GamesRepository(_gamesDbContextMock.Context);
         }
 
         [Fact]
@@ -65,6 +74,19 @@ namespace Speedruns.Backend.Tests.Repositories
             var runs = await _runRepository.GetUserRuns(100);
 
             Assert.Empty(runs);
+        }
+
+        [Fact]
+        public async Task ShouldCreateRun()
+        {
+            var newRun = new RunEntity { Id = 3, GameId = 1, UserId = 1 };
+            await _runRepository.CreateRun(newRun);
+
+            var run = await _runRepository.GetById(newRun.Id);
+
+            Assert.NotNull(run);
+            Assert.IsType<RunEntity>(run);
+            Assert.Equal(3, run.Id);
         }
     }
 }

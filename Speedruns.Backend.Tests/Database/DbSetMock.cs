@@ -30,6 +30,7 @@ namespace Speedruns.Backend.Tests.Database
             _dbSet = entities.AsQueryable().BuildMockDbSet();
 
             // This mocks the AsQueryable extenstion you can call on a DbSet to return the DbSet.
+
             _dbSet.AsQueryable().Returns(_dbSet);
 
              // This mocks out the AddAsync method.
@@ -125,6 +126,7 @@ namespace Speedruns.Backend.Tests.Database
                     var x = callInfo.Arg<object[]>();
                     return entities.SingleOrDefault(y => y.Id.Equals((long)x[0]));
                 });
+         
         }
 
         // This just returns our mocked DbSet.
