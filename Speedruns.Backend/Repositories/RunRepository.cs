@@ -12,7 +12,7 @@ namespace Speedruns.Backend.Repositories
         public RunRepository(SpeedrunsContext context)
         {
             _context = context;
-            _runs = context.Runs;
+            _runs = context.Set<RunEntity>();
         }
 
         public async Task<List<RunEntity>> GetAll()

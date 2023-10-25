@@ -1,0 +1,34 @@
+﻿using Speedruns.Backend.Entities;
+using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Repositories;
+using Speedruns.Backend.Tests.Database;
+
+namespace Speedruns.Backend.Tests.Repositories
+{
+    public class RunRepositoryTests
+    {
+        private DbContextMock<RunEntity> _dbContextMock;
+        private RunRepository _runRepository;
+
+        public RunRepositoryTests()
+        {
+            _dbContextMock = new DbContextMock<RunEntity>(new List<RunEntity>
+            {
+                new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123 },
+                new RunEntity { Id = 2, UserId = 2, GameId = 2, Time = 123 },
+            });
+
+            _runRepository = new RunRepository(_dbContextMock.Context);
+        }
+
+        [Fact]
+        public async Task ShouldReturnListOfRuns()
+        {
+            var runs = await _runRepository.GetAll();
+
+            Assert.NotNull(runs);
+            Assert.IsType<List<RunEntity>>(runs);
+            Assert.Equal(2, runs.Count);
+        }
+    }
+}
