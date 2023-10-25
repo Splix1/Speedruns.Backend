@@ -12,7 +12,7 @@ namespace Speedruns.Backend.Repositories
         public SeriesRepository(SpeedrunsContext context)
         {
             _context = context;
-            _series = _context.Series;
+            _series = _context.Set<SeriesEntity>();
         }
 
         public async Task<List<SeriesEntity>> GetAll()

@@ -10,7 +10,7 @@ namespace Speedruns.Backend.Repositories
 
         public GamesRepository(SpeedrunsContext context)
         {
-            _games = context.Games;
+            _games = context.Set<GameEntity>();
         }
 
         public async Task<List<GameEntity>> GetAll()

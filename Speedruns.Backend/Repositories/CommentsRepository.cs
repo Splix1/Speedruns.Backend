@@ -12,7 +12,7 @@ namespace Speedruns.Backend.Repositories
         public CommentsRepository(SpeedrunsContext context)
         {
             _context = context;
-            _comments = context.Comments;
+            _comments = context.Set<CommentEntity>();
         }
         public async Task<List<CommentEntity>> GetComments(long runId)
         {
