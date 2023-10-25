@@ -93,5 +93,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.IsType<RunEntity>(run);
             Assert.Equal(3, run.Id);
         }
+
+        [Fact]
+        public async Task ShouldReturnNullNoGameCreateRun()
+        {
+            var newRun = new RunEntity { Id = 3, GameId = 100, UserId = 1 };
+
+            var run = await _runRepository.CreateRun(newRun);
+
+            Assert.Null(run);
+        }
     }
 }
