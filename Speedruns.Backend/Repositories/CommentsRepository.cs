@@ -34,7 +34,10 @@ namespace Speedruns.Backend.Repositories
 
         public async Task UpdateComment(CommentEntity comment)
         {
-            _comments.Update(comment);
+            var commentToUpdate = await _comments.FindAsync(comment.Id);
+
+            commentToUpdate.Text = comment.Text;
+
             await _context.SaveChangesAsync();
         }
 

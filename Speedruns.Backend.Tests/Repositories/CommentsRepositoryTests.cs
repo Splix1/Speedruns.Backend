@@ -65,5 +65,20 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(3, comment.Id);
             Assert.Equal("Comment 3", comment.Text);
         }
+
+        [Fact]
+        public async Task ShouldUpdateComment()
+        {
+            var newComment = new CommentEntity { Id = 1, Date = DateTime.UtcNow, Text = "Comment 1 Updated", UserId = 1, RunId = 1 };
+
+            await _commentsRepository.UpdateComment(newComment);
+
+            var comment = await _commentsRepository.GetCommentById(1);
+
+            Assert.NotNull(comment);
+            Assert.IsType<CommentEntity>(comment);
+            Assert.Equal(1, comment.Id);
+            Assert.Equal("Comment 1 Updated", comment.Text);
+        }
     }
 }
