@@ -43,6 +43,12 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal("Comment 1", comment.Text);
         }
 
-      
+        [Fact]
+        public async Task ShouldReturnNullCommentByCommentId()
+        {
+            var comment = await _commentsRepository.GetCommentById(100);
+
+            Assert.Null(comment);
+        }
     }
 }
