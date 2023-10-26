@@ -29,5 +29,16 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.IsType<List<GameEntity>>(games);
             Assert.Equal(2, games.Count);
         }
+
+        [Fact]
+        public async Task ShouldReturnGameById()
+        {
+            var game = await _gamesRepository.GetById(1);
+
+            Assert.NotNull(game);
+            Assert.IsType<GameEntity>(game);
+            Assert.Equal(1, game.Id);
+            Assert.Equal("Super Mario 64", game.Name);
+        }
     }
 }
