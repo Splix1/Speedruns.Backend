@@ -50,5 +50,20 @@ namespace Speedruns.Backend.Tests.Repositories
 
             Assert.Null(comment);
         }
+
+        [Fact]
+        public async Task ShouldAddComment()
+        {
+            var newComment = new CommentEntity { Id = 3, Date = DateTime.UtcNow, Text = "Comment 3", UserId = 1, RunId = 1 };
+
+            await _commentsRepository.AddComment(newComment);
+
+            var comment = await _commentsRepository.GetCommentById(3);
+
+            Assert.NotNull(comment);
+            Assert.IsType<CommentEntity>(comment);
+            Assert.Equal(3, comment.Id);
+            Assert.Equal("Comment 3", comment.Text);
+        }
     }
 }
