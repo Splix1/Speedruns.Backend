@@ -80,5 +80,17 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(1, comment.Id);
             Assert.Equal("Comment 1 Updated", comment.Text);
         }
+
+        [Fact]
+        public async Task ShouldDeleteComment()
+        {
+            var commentToDelete = await _commentsRepository.GetCommentById(1);
+
+            await _commentsRepository.DeleteComment(commentToDelete);
+
+            var comment = await _commentsRepository.GetCommentById(1);
+
+            Assert.Null(comment);
+        }
     }
 }
