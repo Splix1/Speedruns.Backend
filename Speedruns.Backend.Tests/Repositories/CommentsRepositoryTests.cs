@@ -31,5 +31,18 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal("Comment 1", comments.First().Text);
             Assert.Equal("Comment 2", comments.Last().Text);
         }
+
+        [Fact]
+        public async Task ShouldReturnCommentByCommentId()
+        {
+            var comment = await _commentsRepository.GetCommentById(1);
+
+            Assert.NotNull(comment);
+            Assert.IsType<CommentEntity>(comment);
+            Assert.Equal(1, comment.Id);
+            Assert.Equal("Comment 1", comment.Text);
+        }
+
+      
     }
 }
