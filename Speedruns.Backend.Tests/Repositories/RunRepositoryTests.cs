@@ -100,9 +100,11 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldUpdateRun()
         {
-            var newRun = new RunEntity { Id = 1, UserId = 1, GameId = 1, Console = new ConsoleEntity { Name = "PlayStation 2" } };
+            var newRun = new RunEntity { Id = 1, UserId = 1, GameId = 1, Console = new ConsoleEntity { Name = "PlayStation 2" }, Date = DateTime.UtcNow };
 
             var runToUpdate = await _runRepository.GetById(newRun.Id);
+
+            var oldDate = runToUpdate.Date;
 
             await _runRepository.UpdateRun(runToUpdate, newRun);
 
@@ -112,6 +114,7 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.IsType<RunEntity>(run);
             Assert.Equal(1, run.Id);
             Assert.Equal("PlayStation 2", run.Console.Name);
+            Assert.NotEqual(oldDate, runToUpdate.Date);
         }
     }
 }
