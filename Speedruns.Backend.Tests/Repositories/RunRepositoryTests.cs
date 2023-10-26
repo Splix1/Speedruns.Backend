@@ -116,5 +116,17 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal("PlayStation 2", run.Console.Name);
             Assert.NotEqual(oldDate, runToUpdate.Date);
         }
+
+        [Fact]
+        public async Task ShouldDeleteRun()
+        {
+            var runToDelete = await _runRepository.GetById(1);
+
+            await _runRepository.DeleteRun(runToDelete);
+
+            var run = await _runRepository.GetById(1);
+
+            Assert.Null(run);
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace Speedruns.Backend.Repositories
 
         public async Task DeleteRun(RunEntity run)
         {
-            var game = await _context.Games.FindAsync(run.GameId);
+            var game = await _gamesRepository.GetById(run.GameId);
             game.RunsPublished--;
 
             var userRuns = await GetUserRuns(run.UserId);
