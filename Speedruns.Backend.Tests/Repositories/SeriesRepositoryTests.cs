@@ -42,5 +42,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal("Series 1", series.Name);
             Assert.Equal(100, series.Players);
         }
+
+        [Fact]
+        public async Task ShouldReturnSeriesByName()
+        {
+            var series = await _seriesRepository.GetByName("Series 1");
+
+            Assert.NotNull(series);
+            Assert.IsType<SeriesEntity>(series);
+            Assert.Equal("Series 1", series.Name);
+        }
     }
 }
