@@ -40,5 +40,15 @@ namespace Speedruns.Backend.Tests.Repositories
             Assert.Equal(1, game.Id);
             Assert.Equal("Super Mario 64", game.Name);
         }
+
+        [Fact]
+        public async Task ShouldReturnGameByName()
+        {
+            var game = await _gamesRepository.GetByName("Kingdom Hearts 2 Final Mix");
+
+            Assert.NotNull(game);
+            Assert.IsType<GameEntity>(game);
+            Assert.Equal("Kingdom Hearts 2 Final Mix", game.Name);
+        }
     }
 }
