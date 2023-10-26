@@ -8,14 +8,12 @@ namespace Speedruns.Backend.Repositories
     {
         private readonly SpeedrunsContext _context;
         private readonly DbSet<RunEntity> _runs;
-        private readonly DbSet<GameEntity> _games;
         private readonly IGamesRepository _gamesRepository;
 
         public RunRepository(SpeedrunsContext context, IGamesRepository gameRepository)
         {
             _context = context;
             _runs = context.Set<RunEntity>();
-            _games = context.Set<GameEntity>();
             _gamesRepository = gameRepository;
         }
 
@@ -34,14 +32,10 @@ namespace Speedruns.Backend.Repositories
             return await _runs.Where(run => run.UserId == id).Include(x => x.Game).ThenInclude(x => x.Series).Include(x => x.Console).ToListAsync();
         }
 
-        public async Task<RunEntity> CreateRun(RunEntity run)
+        public async Task<RunEntity> CreateRun(RunEntity run, GameEntity game)
         {
 
-            var game = await _gamesRepository.GetById(run.GameId);
-            if(game == null)
-            {
-                return null;
-            }
+           
             game.RunsPublished++;
             
             var userRuns = await GetUserRuns(run.UserId);
@@ -71,7 +65,7 @@ namespace Speedruns.Backend.Repositories
 
         public async Task DeleteRun(RunEntity run)
         {
-            var game = await _context.Games.FindAsync(run.GameId);
+            var game = await _gamesRepository.GetById(run.GameId);
             game.RunsPublished--;
 
             var userRuns = await GetUserRuns(run.UserId);

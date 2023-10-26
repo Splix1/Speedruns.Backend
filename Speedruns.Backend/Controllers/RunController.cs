@@ -9,10 +9,12 @@ namespace Speedruns.Backend.Controllers
     public class RunController : ControllerBase
     {
         private readonly IRunRepository _runs;
+        private readonly IGamesRepository _games;
 
-        public RunController(IRunRepository runs)
+        public RunController(IRunRepository runs, IGamesRepository games)
         {
             _runs = runs;
+            _games = games;
         }
 
         // GET: /api/runs
@@ -58,7 +60,14 @@ namespace Speedruns.Backend.Controllers
                     return BadRequest("Run already exists.");
                 }
 
-                return Ok(await _runs.CreateRun(run));
+                var game = await _games.GetById(run.GameId);
+
+                if (game == null)
+                {
+                    return NotFound("Game not found.");
+                }
+
+                return Ok(await _runs.CreateRun(run, game));
             }
             catch (Exception ex)
             {

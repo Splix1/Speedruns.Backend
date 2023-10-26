@@ -10,14 +10,13 @@ namespace Speedruns.Backend.Tests.Repositories
     {
         private DbContextMock<RunEntity> _dbContextMock;
         private RunRepository _runRepository;
-        private DbContextMock<GameEntity> _gamesDbContextMock;
         private IGamesRepository _gamesRepository;
 
         public RunRepositoryTests()
         {
             _dbContextMock = new DbContextMock<RunEntity>(new List<RunEntity>
             {
-                new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123 },
+                new RunEntity { Id = 1, UserId = 1, GameId = 1, Time = 123, Console = new ConsoleEntity { Name = "PlayStation 1" } },
                 new RunEntity { Id = 2, UserId = 1, GameId = 2, Time = 123 },
             });
 
@@ -34,11 +33,6 @@ namespace Speedruns.Backend.Tests.Repositories
                 });
 
             _runRepository = new RunRepository(_dbContextMock.Context, _gamesRepository);
-
-            _gamesDbContextMock = new DbContextMock<GameEntity>(new List<GameEntity>
-            {
-                new GameEntity { Id = 1 }
-            });
         }
 
         [Fact]
@@ -91,13 +85,48 @@ namespace Speedruns.Backend.Tests.Repositories
         public async Task ShouldCreateRun()
         {
             var newRun = new RunEntity { Id = 3, GameId = 1, UserId = 1 };
-            await _runRepository.CreateRun(newRun);
+
+            var game = await _gamesRepository.GetById(newRun.GameId);
+
+            await _runRepository.CreateRun(newRun, game);
 
             var run = await _runRepository.GetById(newRun.Id);
 
             Assert.NotNull(run);
             Assert.IsType<RunEntity>(run);
             Assert.Equal(3, run.Id);
+        }
+
+        [Fact]
+        public async Task ShouldUpdateRun()
+        {
+            var newRun = new RunEntity { Id = 1, UserId = 1, GameId = 1, Console = new ConsoleEntity { Name = "PlayStation 2" }, Date = DateTime.UtcNow };
+
+            var runToUpdate = await _runRepository.GetById(newRun.Id);
+
+            var oldDate = runToUpdate.Date;
+
+            await _runRepository.UpdateRun(runToUpdate, newRun);
+
+            var run = await _runRepository.GetById(1);
+
+            Assert.NotNull(run);
+            Assert.IsType<RunEntity>(run);
+            Assert.Equal(1, run.Id);
+            Assert.Equal("PlayStation 2", run.Console.Name);
+            Assert.NotEqual(oldDate, runToUpdate.Date);
+        }
+
+        [Fact]
+        public async Task ShouldDeleteRun()
+        {
+            var runToDelete = await _runRepository.GetById(1);
+
+            await _runRepository.DeleteRun(runToDelete);
+
+            var run = await _runRepository.GetById(1);
+
+            Assert.Null(run);
         }
     }
 }

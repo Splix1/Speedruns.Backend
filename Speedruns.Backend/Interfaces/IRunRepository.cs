@@ -7,7 +7,7 @@ namespace Speedruns.Backend.Interfaces
         Task<List<RunEntity>> GetAll();
         Task<RunEntity> GetById(long id);
         Task<List<RunEntity>> GetUserRuns(long? id);
-        Task<RunEntity> CreateRun(RunEntity run);
+        Task<RunEntity> CreateRun(RunEntity run, GameEntity game);
         Task<RunEntity> UpdateRun(RunEntity runToUpdate, RunEntity run);
         Task DeleteRun(RunEntity run);
     }
