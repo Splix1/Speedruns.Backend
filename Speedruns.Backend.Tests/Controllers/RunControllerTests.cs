@@ -195,5 +195,27 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn200Updated()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var runToUpdate = new RunEntity { Id = 1, Time = 123 };
+            var updatedRun = new RunEntity { Id = 1, Time = 12345 };
+
+            runRepositoryMock.GetById(1).Returns(runToUpdate);
+            runRepositoryMock.UpdateRun(runToUpdate, updatedRun).Returns(updatedRun);
+
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.UpdateRun(runToUpdate.Id, updatedRun);
+
+            var result = response.Result as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        }
     }
 }
