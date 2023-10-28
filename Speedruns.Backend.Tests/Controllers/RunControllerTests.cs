@@ -71,6 +71,13 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
 
-        
+        [Fact]
+        public async Task ShouldReturn404GetById()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            
+        }
     }
 }
