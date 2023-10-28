@@ -101,6 +101,29 @@ namespace Speedruns.Backend.Tests.Controllers
 
             gamesRepositoryMock.GetByName(Arg.Any<string>()).Returns(new GameEntity { Id = 1, Name = "Super Mario 64" });
 
+            var controller = new GameController(gamesRepositoryMock);
+
+            var response = await controller.GetByName("Super Mario 64");
+
+            var result = response.Result as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404GetByName()
+        {
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var controller = new GameController(gamesRepositoryMock);
+
+            var response = await controller.GetByName("Super Mario 64");
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
     }
 }
