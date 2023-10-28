@@ -16,6 +16,9 @@ namespace Speedruns.Backend.Tests.Controllers
             var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
             var runsRepositoryMock = Substitute.For<IRunRepository>();
 
+            var run = new RunEntity { Id = 1 };
+
+            runsRepositoryMock.GetById(Arg.Any<long>()).Returns(run);
             commentsRepositoryMock.GetComments(Arg.Any<long>()).Returns(new List<CommentEntity>
             {
                 new CommentEntity { Id = 1, Text = "Test 1" },
@@ -107,5 +110,7 @@ namespace Speedruns.Backend.Tests.Controllers
 
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        
     }
 }
