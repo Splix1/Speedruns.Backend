@@ -37,7 +37,14 @@ namespace Speedruns.Backend.Tests.Controllers
             var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
             var runsRepositoryMock = Substitute.For<IRunRepository>();
 
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
 
+            var response = await controller.GetAll(1);
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
     }
 }
