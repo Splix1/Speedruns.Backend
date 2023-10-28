@@ -61,5 +61,21 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn404GetById()
+        {
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var controller = new GameController(gamesRepositoryMock);
+
+            var response = await controller.GetById(1);
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
     }
 }
