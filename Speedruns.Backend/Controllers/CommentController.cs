@@ -113,7 +113,7 @@ namespace Speedruns.Backend.Controllers
 
                 if (comment == null)
                 {
-                    return NotFound();
+                    return NotFound("Comment not found.");
                 }
 
                 await _comments.DeleteComment(comment);

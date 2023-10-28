@@ -169,5 +169,59 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn200Deleted()
+        {
+            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+            var comment = new CommentEntity { Id = 1 };
+
+            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).Returns(comment);
+
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+
+            var response = await controller.DeleteComment(1);
+
+            var result = response as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404Deleted()
+        {
+            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+
+            var response = await controller.DeleteComment(1);
+
+            var result = response as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500Deleted()
+        {
+            var commentsRepositoryMockWithError = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+            commentsRepositoryMockWithError.GetCommentById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
+
+            var controller = new CommentController(commentsRepositoryMockWithError, runsRepositoryMock);
+
+            var response = await controller.DeleteComment(1);
+
+            var result = response as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
     }
 }
