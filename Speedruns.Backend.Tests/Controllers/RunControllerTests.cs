@@ -77,7 +77,14 @@ namespace Speedruns.Backend.Tests.Controllers
             var runRepositoryMock = Substitute.For<IRunRepository>();
             var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.GetById(1);
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
     }
 }
