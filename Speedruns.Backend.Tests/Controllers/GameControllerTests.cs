@@ -125,5 +125,22 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn500GetByName()
+        {
+            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
+
+            gamesRepositoryMockWithError.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
+
+            var controller = new GameController(gamesRepositoryMockWithError);
+
+            var response = await controller.GetByName("Super Mario 64");
+
+            var result = response.Result as StatusCodeResult; 
+            
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
     }
 }
