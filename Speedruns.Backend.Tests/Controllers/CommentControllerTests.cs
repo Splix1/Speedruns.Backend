@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
@@ -45,6 +46,24 @@ namespace Speedruns.Backend.Tests.Controllers
 
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500GetAll()
+        {
+            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+            runsRepositoryMock.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
+
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+
+            var response = await controller.GetAll(1);
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
     }
 }
