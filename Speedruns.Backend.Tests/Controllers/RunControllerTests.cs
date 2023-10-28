@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
@@ -33,5 +34,25 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn500GetAll()
+        {
+            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            runRepositoryMockWithError.GetAll().ThrowsAsync(new Exception("Error"));
+
+            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMock);
+
+            var response = await controller.GetAll();
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        
     }
 }
