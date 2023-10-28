@@ -93,5 +93,14 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn200GetByName()
+        {
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            gamesRepositoryMock.GetByName(Arg.Any<string>()).Returns(new GameEntity { Id = 1, Name = "Super Mario 64" });
+
+        }
     }
 }
