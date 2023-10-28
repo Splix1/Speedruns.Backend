@@ -95,7 +95,7 @@ namespace Speedruns.Backend.Controllers
 
                 if (runToUpdate == null)
                 {
-                    return NotFound();
+                    return NotFound("Run not found.");
                 }
 
                 return Ok(await _runs.UpdateRun(runToUpdate, run));
