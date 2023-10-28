@@ -38,7 +38,14 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                return Ok(await _runs.GetById(id));
+                var run = await _runs.GetById(id);
+
+                if (run == null)
+                {
+                    return NotFound("Run not found.");
+                }
+
+                return Ok(run);
             }
             catch(Exception ex)
             {
