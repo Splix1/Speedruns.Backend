@@ -13,6 +13,7 @@ namespace Speedruns.Backend.Tests.Controllers
         public async Task ShouldReturn200GetAll()
         {
             var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
 
             commentsRepositoryMock.GetComments(Arg.Any<long>()).Returns(new List<CommentEntity>
             {
@@ -20,7 +21,7 @@ namespace Speedruns.Backend.Tests.Controllers
                 new CommentEntity { Id = 2, Text = "Test 2" }
             });
 
-            var controller = new CommentController(commentsRepositoryMock);
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
 
             var response = await controller.GetAll(1);
 
@@ -28,6 +29,15 @@ namespace Speedruns.Backend.Tests.Controllers
 
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404GetAll()
+        {
+            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+
         }
     }
 }
