@@ -172,5 +172,28 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn404Created()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var run = new RunEntity { UserId = 1 };
+
+            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity>
+            {
+                new RunEntity { Id = 1 }
+            });
+
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.CreateRun(run);
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
     }
 }
