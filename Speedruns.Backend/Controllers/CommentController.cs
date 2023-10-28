@@ -9,10 +9,12 @@ namespace Speedruns.Backend.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentsRepository _comments;
+        private readonly IRunRepository _runs;
 
-        public CommentController(ICommentsRepository comments)
+        public CommentController(ICommentsRepository comments, IRunRepository runs)
         {
             _comments = comments;
+            _runs = runs;
         }
 
         // GET: /api/comments/{runId}
@@ -21,14 +23,40 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                if (_comments == null)
+                var run = await _runs.GetById(runId);
+
+                if (run == null)
                 {
-                    return BadRequest("There are no comments.");
+                    return NotFound("Run does not exist.");
                 }
 
-                return Ok(await _comments.GetComments(runId));
+                var comments = await _comments.GetComments(runId);
+
+                return Ok(comments);
             }
             catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
+        // GET: /api/comments/{commentId}
+        [HttpGet("{commentId}")]
+        public async Task <ActionResult<CommentEntity>> GetById(long commentId)
+        {
+            try
+            {
+                var comment = await _comments.GetCommentById(commentId);
+
+                if (comment == null)
+                {
+                    return NotFound("Comment not found.");
+                }
+
+                return Ok(comment);
+
+            } catch (Exception ex)
             {
                 Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
                 return StatusCode(500);
@@ -41,7 +69,9 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                return Ok(await _comments.AddComment(comment));
+                var createdComment = await _comments.AddComment(comment);
+
+                return CreatedAtAction("GetById", new { id = createdComment.Id }, createdComment);
             } catch (Exception ex)
             {
                 Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
