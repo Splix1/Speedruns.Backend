@@ -21,10 +21,6 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                if (_games == null)
-                {
-                    return BadRequest("Games is empty.");
-                }
 
                 var games = await _games.GetAll();
 
