@@ -65,5 +65,26 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn201Created()
+        {
+            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
+            var runsRepositoryMock = Substitute.For<IRunRepository>();
+
+            var comment = new CommentEntity { Id = 1, Text = "Test" };
+
+            commentsRepositoryMock.AddComment(Arg.Any<CommentEntity>()).Returns(comment);
+            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).Returns(comment);
+
+            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+
+            var response = await controller.AddComment(comment);
+
+            var result = response.Result as CreatedAtActionResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.Created, result.StatusCode);
+        }
     }
 }

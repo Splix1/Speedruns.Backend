@@ -41,13 +41,37 @@ namespace Speedruns.Backend.Controllers
             }
         }
 
+        // GET: /api/comments/{commentId}
+        [HttpGet("{commentId}")]
+        public async Task <ActionResult<CommentEntity>> GetById(long commentId)
+        {
+            try
+            {
+                var comment = await _comments.GetCommentById(commentId);
+
+                if (comment == null)
+                {
+                    return NotFound("Comment not found.");
+                }
+
+                return Ok(comment);
+
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
+                return StatusCode(500);
+            }
+        }
+
         // POST: /api/comments
         [HttpPost]
         public async Task<ActionResult<CommentEntity>> AddComment(CommentEntity comment)
         {
             try
             {
-                return Ok(await _comments.AddComment(comment));
+                var createdComment = await _comments.AddComment(comment);
+
+                return CreatedAtAction("GetById", new { id = createdComment.Id }, createdComment);
             } catch (Exception ex)
             {
                 Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
