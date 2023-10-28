@@ -74,7 +74,9 @@ namespace Speedruns.Backend.Controllers
                     return NotFound("Game not found.");
                 }
 
-                return Ok(await _runs.CreateRun(run, game));
+                var newRun = await _runs.CreateRun(run, game);
+
+                return CreatedAtAction("GetById", new { id = newRun.Id }, newRun);
             }
             catch (Exception ex)
             {
