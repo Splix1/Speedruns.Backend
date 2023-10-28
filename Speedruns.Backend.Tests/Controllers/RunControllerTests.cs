@@ -104,5 +104,96 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn201Created()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+            
+            var game = new GameEntity { Id = 1 };
+            var run = new RunEntity { Id = 1, UserId = 1, GameId = game.Id, Game = game };
+
+            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity> {
+                new RunEntity { Id = 100 }
+            });
+            gamesRepositoryMock.GetById(1).Returns(game);
+            runRepositoryMock.CreateRun(run, game).Returns(run);
+            runRepositoryMock.GetById(1).Returns(run);
+
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.CreateRun(run);
+
+            var result = response.Result as CreatedAtActionResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.Created, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500Created()
+        {
+            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
+            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
+
+            var game = new GameEntity { Id = 1 };
+            var run = new RunEntity { Id = 1, GameId = game.Id, Game = game };
+
+            runRepositoryMockWithError.CreateRun(run, game).ThrowsAsync(new Exception("Error"));
+
+            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMockWithError);
+
+            var response = await controller.CreateRun(run);
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn400Created()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var game = new GameEntity { Id = 1 };
+            var run = new RunEntity {  Id = 1, GameId = game.Id, Game = game, UserId = 1 };
+
+            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity> { run });
+
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.CreateRun(run);
+
+            var result = response.Result as BadRequestObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404Created()
+        {
+            var runRepositoryMock = Substitute.For<IRunRepository>();
+            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+
+            var run = new RunEntity { UserId = 1 };
+
+            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity>
+            {
+                new RunEntity { Id = 1 }
+            });
+
+            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+
+            var response = await controller.CreateRun(run);
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
     }
 }
