@@ -89,7 +89,7 @@ namespace Speedruns.Backend.Controllers
 
                 if (commentExists == null)
                 {
-                    return NotFound();
+                    return NotFound("Comment not found.");
                 }
 
                 await _comments.UpdateComment(comment);
