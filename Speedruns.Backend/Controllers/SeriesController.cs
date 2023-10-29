@@ -20,12 +20,9 @@ namespace Speedruns.Backend.Controllers
         {
             try
             {
-                if(_series == null)
-                {
-                    return BadRequest("Series is empty.");
-                }
+               var series = await _series.GetAll();
 
-                return Ok(await _series.GetAll());
+                return Ok(series);
             } catch(Exception ex)
             {
                 Console.WriteLine($"ERROR: {ex.Message}\nStack Trace: {ex.StackTrace}");
