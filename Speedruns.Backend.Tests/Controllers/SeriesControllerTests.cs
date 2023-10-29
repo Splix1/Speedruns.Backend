@@ -98,5 +98,56 @@ namespace Speedruns.Backend.Tests.Controllers
             Assert.NotNull(result);
             Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
         }
+
+        [Fact]
+        public async Task ShouldReturn200GetByName()
+        {
+            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+
+            var series = new SeriesEntity { Id = 1, Name = "Super Mario Bros." };
+
+            seriesRepositoryMock.GetByName(Arg.Any<string>()).Returns(series);
+
+            var controller = new SeriesController(seriesRepositoryMock);
+
+            var response = await controller.GetByName("Super Mario Bros.");
+
+            var result = response.Result as OkObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn404GetByName()
+        {
+            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+
+            var controller = new SeriesController(seriesRepositoryMock);
+
+            var response = await controller.GetByName("Super Mario Bros.");
+
+            var result = response.Result as NotFoundObjectResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task ShouldReturn500GetByName()
+        {
+            var seriesRepositoryMockWithError = Substitute.For<ISeriesRepository>();
+
+            seriesRepositoryMockWithError.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
+
+            var controller = new SeriesController(seriesRepositoryMockWithError);
+
+            var response = await controller.GetByName("Super Mario Bros.");
+
+            var result = response.Result as StatusCodeResult;
+
+            Assert.NotNull(result);
+            Assert.Equal((int)HttpStatusCode.InternalServerError, result.StatusCode);
+        }
     }
 }
