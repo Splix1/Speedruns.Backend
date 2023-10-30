@@ -20,3 +20,5 @@
 * Console (1 to many w/ Runs, many to many with Game) - Name
 * GameConsole (junction table for Game and Console) - Game, Console
 * Series (1 to many w/ Games) - Name, Players
+
+![image](https://github.com/Splix1/Speedruns.Backend/assets/86242483/3c0ef3a1-30cd-4831-8a0e-f5f3fc344635)
