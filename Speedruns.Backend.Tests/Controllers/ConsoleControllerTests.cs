@@ -5,18 +5,26 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Entities;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class ConsoleControllerTests
+    public class ConsoleControllerTests : IClassFixture<ConsoleControllerFixture>
     {
+
+        private readonly ConsoleControllerFixture _fixture;
+
+        public ConsoleControllerTests(ConsoleControllerFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
+
         [Fact]
         public async Task ShouldReturn200()
         {
-            // create mock of repository
-            var repositoryMock = Substitute.For<IConsolesRepository>();
-
-            repositoryMock.GetAll().Returns(new List<ConsoleEntity>() { new ConsoleEntity
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetAll().Returns(new List<ConsoleEntity>() { new ConsoleEntity
             {
                 Id = 1,
                 Name = "DummyConsole",
@@ -24,7 +32,7 @@ namespace Speedruns.Backend.Tests.Controllers
             });
 
             // create new instance of controller using mock repository
-            var controller = new ConsoleController(repositoryMock);
+            var controller = new ConsoleController(_fixture.Repository);
 
             // make request using controller
             var response = await controller.GetAll();
@@ -39,11 +47,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500()
         {
-            var repositoryMockWithError = Substitute.For<IConsolesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetAll().ThrowsAsync(new Exception("Internal error"));
 
-            repositoryMockWithError.GetAll().ThrowsAsync(new Exception("Internal error"));
-
-            var controller = new ConsoleController(repositoryMockWithError);
+            var controller = new ConsoleController(_fixture.Repository);
 
             var response = await controller.GetAll();
 

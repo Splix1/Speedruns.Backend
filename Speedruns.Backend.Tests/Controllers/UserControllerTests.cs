@@ -6,28 +6,34 @@ using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 using System.Net;
 using Xunit.Abstractions;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class UserControllerTests
+    public class UserControllerTests : IClassFixture<UserControllerFixture>
     {
 
-        
+        private readonly UserControllerFixture _fixture;
+
+        public UserControllerTests(UserControllerFixture fixture) 
+        {  
+            _fixture = fixture; 
+        }
 
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
-            repositoryMock.GetAll().Returns(new List<UserEntity>() { new UserEntity()
+            _fixture.Repository.GetAll().Returns(new List<UserEntity>() { new UserEntity()
             {
                 Id = 1,
                 UserName = "Test",
             } });
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.GetAll();
 
@@ -40,11 +46,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetAll()
         {
-            var repositoryMockWithError = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
-            repositoryMockWithError.GetAll().ThrowsAsync(new Exception("Internal errro"));
+            _fixture.Repository.GetAll().ThrowsAsync(new Exception("Internal errro"));
 
-            var controller = new UserController(repositoryMockWithError);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.GetAll();
 
@@ -57,14 +63,14 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetById()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
-            repositoryMock.GetById(1).Returns(new UserEntity() {
+            _fixture.Repository.GetById(1).Returns(new UserEntity() {
                 Id = 1,
                 UserName = "Test",
             });
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -77,11 +83,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetById()
         {
-            var repositoryMockWithError = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
-            repositoryMockWithError.GetById(1).ThrowsAsync(new Exception("Internal error"));
+            _fixture.Repository.GetById(1).ThrowsAsync(new Exception("Internal error"));
 
-            var controller = new UserController(repositoryMockWithError);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -94,9 +100,9 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetById()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -110,13 +116,13 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn201CreateUser()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
             var mockUser = new UserEntity { UserName = "Test" };
 
-            repositoryMock.CreateUser(mockUser).Returns(mockUser);
+            _fixture.Repository.CreateUser(mockUser).Returns(mockUser);
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.CreateUser(mockUser);
 
@@ -148,14 +154,14 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200UpdateUser()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
             var mockUser = new UserEntity { Id = 1, UserName = "Test" };
 
-            repositoryMock.GetById(Arg.Any<long>()).Returns(mockUser);
-            repositoryMock.UpdateUser(Arg.Any<long>(), Arg.Any<UserEntity>()).Returns(callInfo => callInfo.Arg<UserEntity>());
+            _fixture.Repository.GetById(Arg.Any<long>()).Returns(mockUser);
+            _fixture.Repository.UpdateUser(Arg.Any<long>(), Arg.Any<UserEntity>()).Returns(callInfo => callInfo.Arg<UserEntity>());
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
            
             var response = await controller.UpdateUser(mockUser.Id, mockUser);
 
@@ -206,14 +212,14 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200DeleteUser()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
             var mockUser = new UserEntity { Id = 1, UserName = "Test" };
 
-            repositoryMock.GetById(Arg.Any<long>()).Returns(mockUser);
+            _fixture.Repository.GetById(Arg.Any<long>()).Returns(mockUser);
 
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.DeleteUser(mockUser.Id);
            
@@ -247,11 +253,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404DeleteUser()
         {
-            var repositoryMock = Substitute.For<IUserRepository>();
+            _fixture.ResetSubstitutes();
 
             var mockUser = new UserEntity { Id = 1, UserName = "Test" };
 
-            var controller = new UserController(repositoryMock);
+            var controller = new UserController(_fixture.Repository);
 
             var response = await controller.DeleteUser(mockUser.Id);
 

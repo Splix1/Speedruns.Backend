@@ -3,25 +3,32 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
-using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 using System.Net;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class SeriesControllerTests
+    public class SeriesControllerTests : IClassFixture<SeriesControllerFixture>
     {
+        private readonly SeriesControllerFixture _fixture;
+
+        public SeriesControllerTests(SeriesControllerFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
-            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            seriesRepositoryMock.GetAll().Returns(new List<SeriesEntity>
+            _fixture.Repository.GetAll().Returns(new List<SeriesEntity>
             {
                 new SeriesEntity { Id = 1 },
                 new SeriesEntity { Id = 2 }
             });
 
-            var controller = new SeriesController(seriesRepositoryMock);
+            var controller = new SeriesController(_fixture.Repository);
             
             var response = await controller.GetAll();
 
@@ -34,11 +41,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetAll()
         {
-            var seriesRepositoryMockWithError = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            seriesRepositoryMockWithError.GetAll().ThrowsAsync(new Exception("Error"));
+            _fixture.Repository.GetAll().ThrowsAsync(new Exception("Error"));
 
-            var controller = new SeriesController(seriesRepositoryMockWithError);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetAll();
 
@@ -51,13 +58,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetById()
         {
-            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
-
+            _fixture.ResetSubstitutes();
             var series = new SeriesEntity { Id = 1 };
 
-            seriesRepositoryMock.GetById(Arg.Any<long>()).Returns(series);
+            _fixture.Repository.GetById(Arg.Any<long>()).Returns(series);
 
-            var controller = new SeriesController(seriesRepositoryMock);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -70,9 +76,9 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetById()
         {
-            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            var controller = new SeriesController(seriesRepositoryMock);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -85,11 +91,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetById()
         {
-            var seriesRepositoryMockWithError = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            seriesRepositoryMockWithError.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
+            _fixture.Repository.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
 
-            var controller = new SeriesController(seriesRepositoryMockWithError);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -102,13 +108,13 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetByName()
         {
-            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
             var series = new SeriesEntity { Id = 1, Name = "Super Mario Bros." };
 
-            seriesRepositoryMock.GetByName(Arg.Any<string>()).Returns(series);
+            _fixture.Repository.GetByName(Arg.Any<string>()).Returns(series);
 
-            var controller = new SeriesController(seriesRepositoryMock);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario Bros.");
 
@@ -121,9 +127,9 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetByName()
         {
-            var seriesRepositoryMock = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            var controller = new SeriesController(seriesRepositoryMock);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario Bros.");
 
@@ -136,11 +142,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetByName()
         {
-            var seriesRepositoryMockWithError = Substitute.For<ISeriesRepository>();
+            _fixture.ResetSubstitutes();
 
-            seriesRepositoryMockWithError.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
+            _fixture.Repository.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
 
-            var controller = new SeriesController(seriesRepositoryMockWithError);
+            var controller = new SeriesController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario Bros.");
 

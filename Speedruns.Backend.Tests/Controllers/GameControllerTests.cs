@@ -5,20 +5,27 @@ using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 using System.Net;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class GameControllerTests
+    public class GameControllerTests : IClassFixture<GameControllerFixture>
     {
+        private readonly GameControllerFixture _fixture;
+
+        public GameControllerTests(GameControllerFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetAll().Returns(new List<GameEntity> { new GameEntity { Id = 1 } });
 
-            gamesRepositoryMock.GetAll().Returns(new List<GameEntity> { new GameEntity { Id = 1 } });
-
-            var controller = new GameController(gamesRepositoryMock);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetAll();
 
@@ -31,11 +38,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetAll()
         {
-            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetAll().ThrowsAsync(new Exception("Error"));
 
-            gamesRepositoryMockWithError.GetAll().ThrowsAsync(new Exception("Error"));
-
-            var controller = new GameController(gamesRepositoryMockWithError);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetAll();
 
@@ -48,11 +54,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetById()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetById(Arg.Any<long>()).Returns(new GameEntity { Id = 1 });
 
-            gamesRepositoryMock.GetById(Arg.Any<long>()).Returns(new GameEntity { Id = 1 });
-
-            var controller = new GameController(gamesRepositoryMock);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -65,9 +70,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetById()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-
-            var controller = new GameController(gamesRepositoryMock);
+            _fixture.ResetSubstitutes();
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -80,11 +84,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetById()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
 
-            gamesRepositoryMock.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
-
-            var controller = new GameController(gamesRepositoryMock);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetById(1);
 
@@ -97,11 +100,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetByName()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetByName(Arg.Any<string>()).Returns(new GameEntity { Id = 1, Name = "Super Mario 64" });
 
-            gamesRepositoryMock.GetByName(Arg.Any<string>()).Returns(new GameEntity { Id = 1, Name = "Super Mario 64" });
-
-            var controller = new GameController(gamesRepositoryMock);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario 64");
 
@@ -114,9 +116,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetByName()
         {
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-
-            var controller = new GameController(gamesRepositoryMock);
+            _fixture.ResetSubstitutes();
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario 64");
 
@@ -129,11 +130,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetByName()
         {
-            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.Repository.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
 
-            gamesRepositoryMockWithError.GetByName(Arg.Any<string>()).ThrowsAsync(new Exception("Error"));
-
-            var controller = new GameController(gamesRepositoryMockWithError);
+            var controller = new GameController(_fixture.Repository);
 
             var response = await controller.GetByName("Super Mario 64");
 
