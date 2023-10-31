@@ -4,28 +4,34 @@ using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 using System.Net;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class CommentControllerTests
+    public class CommentControllerTests : IClassFixture<CommentControllerFixture>
     {
+        private readonly CommentControllerFixture _fixture;
+
+        public CommentControllerTests(CommentControllerFixture fixture)
+        {
+            _fixture = fixture;
+        }
+
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var run = new RunEntity { Id = 1 };
 
-            runsRepositoryMock.GetById(Arg.Any<long>()).Returns(run);
-            commentsRepositoryMock.GetComments(Arg.Any<long>()).Returns(new List<CommentEntity>
+            _fixture.RunRepository.GetById(Arg.Any<long>()).Returns(run);
+            _fixture.CommentsRepository.GetComments(Arg.Any<long>()).Returns(new List<CommentEntity>
             {
                 new CommentEntity { Id = 1, Text = "Test 1" },
                 new CommentEntity { Id = 2, Text = "Test 2" }
             });
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.GetAll(1);
 
@@ -38,10 +44,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetAll()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            _fixture.ResetRepositories();
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.GetAll(1);
 
@@ -54,12 +58,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetAll()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
+            _fixture.ResetRepositories();
+            _fixture.RunRepository.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
 
-            runsRepositoryMock.GetById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
-
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.GetAll(1);
 
@@ -72,15 +74,13 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn201Created()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var comment = new CommentEntity { Id = 1, Text = "Test" };
 
-            commentsRepositoryMock.AddComment(Arg.Any<CommentEntity>()).Returns(comment);
-            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).Returns(comment);
+            _fixture.CommentsRepository.AddComment(Arg.Any<CommentEntity>()).Returns(comment);
+            _fixture.CommentsRepository.GetCommentById(Arg.Any<long>()).Returns(comment);
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.AddComment(comment);
 
@@ -93,14 +93,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Created()
         {
-            var commentsRepositoryMockWithError = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var comment = new CommentEntity { Id = 1 };
 
-            commentsRepositoryMockWithError.AddComment(Arg.Any<CommentEntity>()).ThrowsAsync(new Exception("Error"));
+            _fixture.CommentsRepository.AddComment(Arg.Any<CommentEntity>()).ThrowsAsync(new Exception("Error"));
 
-            var controller = new CommentController(commentsRepositoryMockWithError, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.AddComment(comment);
 
@@ -115,14 +113,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200Updated()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var comment = new CommentEntity { Id = 1 };
 
-            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).Returns(comment);
+            _fixture.CommentsRepository.GetCommentById(Arg.Any<long>()).Returns(comment);
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.UpdateComment(comment);
 
@@ -135,12 +131,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404Updated()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var comment = new CommentEntity { Id = 1 };
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.UpdateComment(comment);
 
@@ -153,14 +147,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Updated()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
-            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
+            _fixture.ResetRepositories();
+            _fixture.CommentsRepository.GetCommentById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
 
             var comment = new CommentEntity { Id = 1 };
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.UpdateComment(comment);
 
@@ -173,14 +165,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200Deleted()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
+            _fixture.ResetRepositories();
             var comment = new CommentEntity { Id = 1 };
 
-            commentsRepositoryMock.GetCommentById(Arg.Any<long>()).Returns(comment);
+            _fixture.CommentsRepository.GetCommentById(Arg.Any<long>()).Returns(comment);
 
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.DeleteComment(1);
 
@@ -193,10 +183,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404Deleted()
         {
-            var commentsRepositoryMock = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
-
-            var controller = new CommentController(commentsRepositoryMock, runsRepositoryMock);
+            _fixture.ResetRepositories();
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.DeleteComment(1);
 
@@ -209,12 +197,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Deleted()
         {
-            var commentsRepositoryMockWithError = Substitute.For<ICommentsRepository>();
-            var runsRepositoryMock = Substitute.For<IRunRepository>();
+            _fixture.ResetRepositories();
+            _fixture.CommentsRepository.GetCommentById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
 
-            commentsRepositoryMockWithError.GetCommentById(Arg.Any<long>()).ThrowsAsync(new Exception("Error"));
-
-            var controller = new CommentController(commentsRepositoryMockWithError, runsRepositoryMock);
+            var controller = new CommentController(_fixture.CommentsRepository, _fixture.RunRepository);
 
             var response = await controller.DeleteComment(1);
 
