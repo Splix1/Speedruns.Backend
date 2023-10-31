@@ -1,29 +1,21 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Repositories;
-using Speedruns.Backend.Tests.Database;
+using Speedruns.Backend.Tests._Fixtures.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
-    public class SeriesRepositoryTests
+    public class SeriesRepositoryTests : IClassFixture<SeriesRepositoryFixture>
     {
-        private DbContextMock<SeriesEntity> _dbContextMock;
-        private SeriesRepository _seriesRepository;
+        private readonly SeriesRepositoryFixture _fixture;
 
-        public SeriesRepositoryTests()
+        public SeriesRepositoryTests(SeriesRepositoryFixture fixture)
         {
-            _dbContextMock = new DbContextMock<SeriesEntity>(new List<SeriesEntity>
-            {
-                new SeriesEntity { Id = 1, Name = "Series 1", Players = 100 },
-                new SeriesEntity { Id = 2, Name = "Series 2", Players = 200 }
-            });
-
-            _seriesRepository = new SeriesRepository(_dbContextMock.Context);
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task ShouldReturnListOfSeries()
         {
-            var series = await _seriesRepository.GetAll();
+            var series = await _fixture.Repository.GetAll();
 
             Assert.NotNull(series);
             Assert.IsType<List<SeriesEntity>>(series);
@@ -35,7 +27,7 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnSeriesById()
         {
-            var series = await _seriesRepository.GetById(1);
+            var series = await _fixture.Repository.GetById(1);
 
             Assert.NotNull(series);
             Assert.IsType<SeriesEntity>(series);
@@ -46,7 +38,7 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnSeriesByName()
         {
-            var series = await _seriesRepository.GetByName("Series 1");
+            var series = await _fixture.Repository.GetByName("Series 1");
 
             Assert.NotNull(series);
             Assert.IsType<SeriesEntity>(series);

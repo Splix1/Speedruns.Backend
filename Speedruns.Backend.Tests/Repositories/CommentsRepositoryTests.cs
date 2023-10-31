@@ -1,29 +1,23 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Repositories;
-using Speedruns.Backend.Tests.Database;
+using Speedruns.Backend.Tests._Fixtures.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
-    public class CommentsRepositoryTests
+    public class CommentsRepositoryTests : IClassFixture<CommentsRepositoryFixture>
     {
-        private DbContextMock<CommentEntity> _dbContextMock;
-        private CommentsRepository _commentsRepository;
+        private readonly CommentsRepositoryFixture _fixture;
 
-        public CommentsRepositoryTests()
+        public CommentsRepositoryTests(CommentsRepositoryFixture fixture)
         {
-            _dbContextMock = new DbContextMock<CommentEntity>(new List<CommentEntity>
-            {
-                new CommentEntity { Id = 1, Date = DateTime.UtcNow, Text = "Comment 1", UserId = 1, RunId = 1 },
-                new CommentEntity { Id = 2, Date = DateTime.UtcNow, Text = "Comment 2", UserId = 1, RunId = 1 },
-            });
-
-            _commentsRepository = new CommentsRepository(_dbContextMock.Context);
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task ShouldReturnCommentsByRunId()
         {
-            var comments = await _commentsRepository.GetComments(1);
+            _fixture.ResetRepository();
+
+            var comments = await _fixture.Repository.GetComments(1);
 
             Assert.NotNull(comments);
             Assert.IsType<List<CommentEntity>>(comments);
@@ -35,7 +29,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnCommentByCommentId()
         {
-            var comment = await _commentsRepository.GetCommentById(1);
+            _fixture.ResetRepository();
+            var comment = await _fixture.Repository.GetCommentById(1);
 
             Assert.NotNull(comment);
             Assert.IsType<CommentEntity>(comment);
@@ -46,7 +41,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnNullCommentByCommentId()
         {
-            var comment = await _commentsRepository.GetCommentById(100);
+            _fixture.ResetRepository();
+            var comment = await _fixture.Repository.GetCommentById(100);
 
             Assert.Null(comment);
         }
@@ -54,11 +50,12 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldAddComment()
         {
+            _fixture.ResetRepository();
             var newComment = new CommentEntity { Id = 3, Date = DateTime.UtcNow, Text = "Comment 3", UserId = 1, RunId = 1 };
 
-            await _commentsRepository.AddComment(newComment);
+            await _fixture.Repository.AddComment(newComment);
 
-            var comment = await _commentsRepository.GetCommentById(3);
+            var comment = await _fixture.Repository.GetCommentById(3);
 
             Assert.NotNull(comment);
             Assert.IsType<CommentEntity>(comment);
@@ -69,11 +66,12 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldUpdateComment()
         {
+            _fixture.ResetRepository();
             var newComment = new CommentEntity { Id = 1, Date = DateTime.UtcNow, Text = "Comment 1 Updated", UserId = 1, RunId = 1 };
 
-            await _commentsRepository.UpdateComment(newComment);
+            await _fixture.Repository.UpdateComment(newComment);
 
-            var comment = await _commentsRepository.GetCommentById(1);
+            var comment = await _fixture.Repository.GetCommentById(1);
 
             Assert.NotNull(comment);
             Assert.IsType<CommentEntity>(comment);
@@ -84,11 +82,12 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldDeleteComment()
         {
-            var commentToDelete = await _commentsRepository.GetCommentById(1);
+            _fixture.ResetRepository();
+            var commentToDelete = await _fixture.Repository.GetCommentById(1);
 
-            await _commentsRepository.DeleteComment(commentToDelete);
+            await _fixture.Repository.DeleteComment(commentToDelete);
 
-            var comment = await _commentsRepository.GetCommentById(1);
+            var comment = await _fixture.Repository.GetCommentById(1);
 
             Assert.Null(comment);
         }

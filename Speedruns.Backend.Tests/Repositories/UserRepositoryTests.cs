@@ -1,29 +1,23 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Repositories;
-using Speedruns.Backend.Tests.Database;
+using Speedruns.Backend.Tests._Fixtures.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
-    public class UserRepositoryTests
+    public class UserRepositoryTests : IClassFixture<UserRepositoryFixture>
     {
-        private DbContextMock<UserEntity> _dbContextMock;
-        private UserRepository _userRepository;
 
-        public UserRepositoryTests()
+        private readonly UserRepositoryFixture _fixture;
+
+        public UserRepositoryTests(UserRepositoryFixture fixture)
         {
-            _dbContextMock = new DbContextMock<UserEntity>(new List<UserEntity>
-            {
-                new UserEntity { Id = 1, UserName = "Test 1", Runs = new List<RunEntity>{ new RunEntity { Id = 1, UserId = 1, ConsoleId = 1, GameId = 1, Time = 123 } } },
-                new UserEntity { Id = 2, UserName = "Test 2" },
-            });
-
-            _userRepository = new UserRepository(_dbContextMock.Context);
+            _fixture = fixture;
         }
-
+        
         [Fact]
         public async Task ShouldReturnListOfUsers()
         {
-            var users = await _userRepository.GetAll();
+            _fixture.ResetRepository();
+            var users = await _fixture.Repository.GetAll();
 
             Assert.NotNull(users);
             Assert.IsType<List<UserEntity>>(users);
@@ -34,7 +28,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnUserById()
         {
-            var user = await _userRepository.GetById(1);
+            _fixture.ResetRepository();
+            var user = await _fixture.Repository.GetById(1);
 
             Assert.NotNull(user);
             Assert.IsType<UserEntity>(user);
@@ -45,7 +40,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnNullUserById()
         {
-            var user = await _userRepository.GetById(100);
+            _fixture.ResetRepository();
+            var user = await _fixture.Repository.GetById(100);
 
             Assert.Null(user);
         }
@@ -53,7 +49,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnUserByName()
         {
-            var user = await _userRepository.GetByName("Test 1");
+            _fixture.ResetRepository();
+            var user = await _fixture.Repository.GetByName("Test 1");
 
             Assert.NotNull(user);
             Assert.IsType<UserEntity>(user);
@@ -64,7 +61,8 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnNullUserByName()
         {
-            var user = await _userRepository.GetByName("Test 3");
+            _fixture.ResetRepository();
+            var user = await _fixture.Repository.GetByName("Test 3");
 
             Assert.Null(user);
         }
@@ -72,9 +70,10 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnCreatedUser()
         {
+            _fixture.ResetRepository();
             var user = new UserEntity { Id = 3, UserName = "Test 3" };
 
-            var createdUser = await _userRepository.CreateUser(user);
+            var createdUser = await _fixture.Repository.CreateUser(user);
 
             Assert.NotNull(createdUser);
             Assert.IsType<UserEntity>(createdUser);
@@ -85,9 +84,10 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnUpdatedUser()
         {
+            _fixture.ResetRepository();
             var user = new UserEntity { Id = 1, UserName = "Testing 1" };
 
-            var updatedUser = await _userRepository.UpdateUser(user.Id, user);
+            var updatedUser = await _fixture.Repository.UpdateUser(user.Id, user);
 
             Assert.NotNull(updatedUser);
             Assert.IsType<UserEntity>(updatedUser);
@@ -98,9 +98,10 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnNullUpdatedUser()
         {
+            _fixture.ResetRepository();
             var user = new UserEntity { Id = 100, UserName = "Testing 100" };
 
-            var updatedUser = await _userRepository.UpdateUser(user.Id, user);
+            var updatedUser = await _fixture.Repository.UpdateUser(user.Id, user);
 
             Assert.Null(updatedUser);
         }
@@ -108,11 +109,12 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldDeleteUser()
         {
-            var userToDelete = await _userRepository.GetById(1);
+            _fixture.ResetRepository();
+            var userToDelete = await _fixture.Repository.GetById(1);
 
-            await _userRepository.DeleteUser(userToDelete);
+            await _fixture.Repository.DeleteUser(userToDelete);
 
-            var deletedUser = await _userRepository.GetById(1);
+            var deletedUser = await _fixture.Repository.GetById(1);
 
             Assert.Null(deletedUser);
         }

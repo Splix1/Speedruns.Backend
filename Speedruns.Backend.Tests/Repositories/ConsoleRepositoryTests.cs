@@ -1,28 +1,21 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Tests.Database;
-using Speedruns.Backend.Repositories;
+using Speedruns.Backend.Tests._Fixtures.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
-    public class ConsoleRepositoryTests
+    public class ConsoleRepositoryTests : IClassFixture<ConsolesRepositoryFixture>
     {
-        private DbContextMock<ConsoleEntity> _dbContextMock;
-        private ConsolesRepository _consoleRepository;
+        private readonly ConsolesRepositoryFixture _fixture;
 
-        public ConsoleRepositoryTests()
+        public ConsoleRepositoryTests(ConsolesRepositoryFixture fixture)
         {
-            _dbContextMock = new DbContextMock<ConsoleEntity>(new List<ConsoleEntity>
-            {
-                new ConsoleEntity { Id = 1, Name = "Console 1" },
-                new ConsoleEntity { Id = 2, Name = "Console 2" },
-            });
-            _consoleRepository = new ConsolesRepository(_dbContextMock.Context);
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task ShouldReturnListOfConsoles()
         {
-            var consoles = await _consoleRepository.GetAll();
+            var consoles = await _fixture.Repository.GetAll();
 
             Assert.NotNull(consoles);
             Assert.IsType<List<ConsoleEntity>>(consoles);
