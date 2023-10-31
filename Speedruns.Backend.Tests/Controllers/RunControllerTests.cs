@@ -4,27 +4,31 @@ using NSubstitute.ExceptionExtensions;
 using Speedruns.Backend.Controllers;
 using Speedruns.Backend.Entities;
 using Speedruns.Backend.Interfaces;
+using Speedruns.Backend.Tests._Fixtures.Controllers;
 using System.Net;
 
 namespace Speedruns.Backend.Tests.Controllers
 {
-    public class RunControllerTests
+    public class RunControllerTests : IClassFixture<RunControllerFixture>
     {
+        private readonly RunControllerFixture _fixture;
+
+        public RunControllerTests(RunControllerFixture fixture)
+        {
+            _fixture = fixture;
+        }
 
         [Fact]
         public async Task ShouldReturn200GetAll()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-
-
-            runRepositoryMock.GetAll().Returns(new List<RunEntity>
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetAll().Returns(new List<RunEntity>
             {
                 new RunEntity { Id = 1, Date = DateTime.UtcNow, UserId = 1, ConsoleId = 1, GameId = 1, Time = 123 },
                 new RunEntity { Id = 2, Date = DateTime.UtcNow, UserId = 1, ConsoleId = 2, GameId = 2, Time = 123}
             });
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.GetAll();
 
@@ -38,12 +42,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetAll()
         {
-            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            runRepositoryMockWithError.GetAll().ThrowsAsync(new Exception("Error"));
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetAll().ThrowsAsync(new Exception("Error"));
 
-            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.GetAll();
 
@@ -56,12 +59,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200GetById()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            runRepositoryMock.GetById(1).Returns(new RunEntity { Id = 1 });
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetById(1).Returns(new RunEntity { Id = 1 });
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.GetById(1);
 
@@ -74,10 +76,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404GetById()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            _fixture.ResetSubstitutes();
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.GetById(1);
 
@@ -90,12 +90,10 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500GetById()
         {
-            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
-            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetById(1).ThrowsAsync(new Exception("Error"));
 
-            runRepositoryMockWithError.GetById(1).ThrowsAsync(new Exception("Error"));
-
-            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMockWithError);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.GetById(1);
 
@@ -108,20 +106,18 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn201Created()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-            
+            _fixture.ResetSubstitutes();
             var game = new GameEntity { Id = 1 };
             var run = new RunEntity { Id = 1, UserId = 1, GameId = game.Id, Game = game };
 
-            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity> {
+            _fixture.RunRepository.GetUserRuns(1).Returns(new List<RunEntity> {
                 new RunEntity { Id = 100 }
             });
-            gamesRepositoryMock.GetById(1).Returns(game);
-            runRepositoryMock.CreateRun(run, game).Returns(run);
-            runRepositoryMock.GetById(1).Returns(run);
+            _fixture.GamesRepository.GetById(1).Returns(game);
+            _fixture.RunRepository.CreateRun(run, game).Returns(run);
+            _fixture.RunRepository.GetById(1).Returns(run);
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.CreateRun(run);
 
@@ -134,15 +130,14 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Created()
         {
-            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
-            var gamesRepositoryMockWithError = Substitute.For<IGamesRepository>();
 
+            _fixture.ResetSubstitutes();
             var game = new GameEntity { Id = 1 };
             var run = new RunEntity { Id = 1, GameId = game.Id, Game = game };
 
-            runRepositoryMockWithError.CreateRun(run, game).ThrowsAsync(new Exception("Error"));
+            _fixture.RunRepository.CreateRun(run, game).ThrowsAsync(new Exception("Error"));
 
-            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMockWithError);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.CreateRun(run);
 
@@ -155,15 +150,14 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn400Created()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
+            _fixture.ResetSubstitutes();
             var game = new GameEntity { Id = 1 };
             var run = new RunEntity {  Id = 1, GameId = game.Id, Game = game, UserId = 1 };
 
-            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity> { run });
+            _fixture.RunRepository.GetUserRuns(1).Returns(new List<RunEntity> { run });
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.CreateRun(run);
 
@@ -176,17 +170,16 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404Created()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
+            _fixture.ResetSubstitutes();
             var run = new RunEntity { UserId = 1 };
 
-            runRepositoryMock.GetUserRuns(1).Returns(new List<RunEntity>
+            _fixture.RunRepository.GetUserRuns(1).Returns(new List<RunEntity>
             {
                 new RunEntity { Id = 1 }
             });
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.CreateRun(run);
 
@@ -199,16 +192,15 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200Updated()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
+            _fixture.ResetSubstitutes();
             var runToUpdate = new RunEntity { Id = 1, Time = 123 };
             var updatedRun = new RunEntity { Id = 1, Time = 12345 };
 
-            runRepositoryMock.GetById(1).Returns(runToUpdate);
-            runRepositoryMock.UpdateRun(runToUpdate, updatedRun).Returns(updatedRun);
+            _fixture.RunRepository.GetById(1).Returns(runToUpdate);
+            _fixture.RunRepository.UpdateRun(runToUpdate, updatedRun).Returns(updatedRun);
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.UpdateRun(runToUpdate.Id, updatedRun);
 
@@ -221,10 +213,8 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404Updated()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
-
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            _fixture.ResetSubstitutes();
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.UpdateRun(1, new RunEntity { Id = 1, Time = 12345 });
 
@@ -237,13 +227,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Updated()
         {
-            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            runRepositoryMockWithError.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1, Time = 123 });
-            runRepositoryMockWithError.UpdateRun(Arg.Any<RunEntity>(), Arg.Any<RunEntity>()).ThrowsAsync(new Exception("Error"));
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1, Time = 123 });
+            _fixture.RunRepository.UpdateRun(Arg.Any<RunEntity>(), Arg.Any<RunEntity>()).ThrowsAsync(new Exception("Error"));
 
-            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.UpdateRun(1, new RunEntity { Id = 1, Time = 12345 });
 
@@ -256,12 +245,11 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn200Deleted()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            runRepositoryMock.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1 });
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1 });
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.DeleteRun(1);
 
@@ -274,10 +262,9 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn404Deleted()
         {
-            var runRepositoryMock = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            var controller = new RunController(runRepositoryMock, gamesRepositoryMock);
+            _fixture.ResetSubstitutes();
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.DeleteRun(1);
 
@@ -290,13 +277,12 @@ namespace Speedruns.Backend.Tests.Controllers
         [Fact]
         public async Task ShouldReturn500Deleted()
         {
-            var runRepositoryMockWithError = Substitute.For<IRunRepository>();
-            var gamesRepositoryMock = Substitute.For<IGamesRepository>();
 
-            runRepositoryMockWithError.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1 });
-            runRepositoryMockWithError.DeleteRun(Arg.Any<RunEntity>()).ThrowsAsync(new Exception("Error"));
+            _fixture.ResetSubstitutes();
+            _fixture.RunRepository.GetById(Arg.Any<long>()).Returns(new RunEntity { Id = 1 });
+            _fixture.RunRepository.DeleteRun(Arg.Any<RunEntity>()).ThrowsAsync(new Exception("Error"));
 
-            var controller = new RunController(runRepositoryMockWithError, gamesRepositoryMock);
+            var controller = new RunController(_fixture.RunRepository, _fixture.GamesRepository);
 
             var response = await controller.DeleteRun(1);
 
