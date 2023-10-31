@@ -1,29 +1,21 @@
 ﻿using Speedruns.Backend.Entities;
-using Speedruns.Backend.Repositories;
-using Speedruns.Backend.Tests.Database;
+using Speedruns.Backend.Tests._Fixtures.Repositories;
 
 namespace Speedruns.Backend.Tests.Repositories
 {
-    public class GamesRepositoryTests
+    public class GamesRepositoryTests : IClassFixture<GamesRepositoryFixture>
     {
-        private DbContextMock<GameEntity> _dbContextMock;
-        private GamesRepository _gamesRepository;
+       private readonly GamesRepositoryFixture _fixture;
 
-        public GamesRepositoryTests()
+        public GamesRepositoryTests(GamesRepositoryFixture fixture)
         {
-            _dbContextMock = new DbContextMock<GameEntity>(new List<GameEntity>
-            {
-                new GameEntity { Id = 1, Name = "Super Mario 64", ReleaseYear = 1996, Players = 100, RunsPublished = 1000 },
-                new GameEntity { Id = 2, Name = "Kingdom Hearts 2 Final Mix", ReleaseYear = 2007, Players = 50, RunsPublished = 1000 },
-            });
-
-            _gamesRepository = new GamesRepository(_dbContextMock.Context);
+            _fixture = fixture;
         }
 
         [Fact]
         public async Task ShouldReturnListOfGames()
         {
-            var games = await _gamesRepository.GetAll();
+            var games = await _fixture.Repository.GetAll();
 
             Assert.NotNull(games);
             Assert.IsType<List<GameEntity>>(games);
@@ -33,7 +25,7 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnGameById()
         {
-            var game = await _gamesRepository.GetById(1);
+            var game = await _fixture.Repository.GetById(1);
 
             Assert.NotNull(game);
             Assert.IsType<GameEntity>(game);
@@ -44,7 +36,7 @@ namespace Speedruns.Backend.Tests.Repositories
         [Fact]
         public async Task ShouldReturnGameByName()
         {
-            var game = await _gamesRepository.GetByName("Kingdom Hearts 2 Final Mix");
+            var game = await _fixture.Repository.GetByName("Kingdom Hearts 2 Final Mix");
 
             Assert.NotNull(game);
             Assert.IsType<GameEntity>(game);
