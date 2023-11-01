@@ -8,9 +8,11 @@
 
 - ASP.NET (web API framework)
 - Entity Framework (ORM)
+- PostgreSQL (relational database)
 - xUnit (unit testing framework)
-- NSubstitute (mocking library)
-- Auth0 (oAuth)
+- NSubstitute (mocking library) 
+- AWS Cognito (auth)
+
 
 ## General Database Schema
 * User (1 to many w/ Runs) - UserName, ImageUrl, YoutubeLink, TwitchLink, Runs
