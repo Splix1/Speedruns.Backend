@@ -1,6 +1,7 @@
 # Speedruns.Backend
 
 ## This repository contains the backend for my speedrunning leaderboards webapp. This is a fun project to further learn C#/.NET and build upon those skills.
+# The frontend is being developed in: [Speedruns.Frontend](https://github.com/Splix1/Speedruns.Frontend)
 
 ## The backend will consist primarily of C#/ASP.NET following the repository pattern.
 
