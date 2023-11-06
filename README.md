@@ -11,7 +11,7 @@
 - PostgreSQL (relational database)
 - xUnit (unit testing framework)
 - NSubstitute (mocking library) 
-- AWS Cognito (auth)
+- Auth0 (OAuth)
 
 
 ## General Database Schema
